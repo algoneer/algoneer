@@ -6,8 +6,8 @@ setup(
     python_requires='>=3',
     version='0.0.1',
     author='Andreas Dewes',
-    author_email='andreas.dewes@7scientists.com',
-    license='Affero GPL',
+    author_email='andreas.dewes@algoneer.org',
+    license='GNU Affero General Public License - Version 3 (AGPL-3)',
     url='https://github.com/algoneer/algoneer-py',
     packages=find_packages(),
     package_data={'': ['*.ini']},
@@ -19,7 +19,7 @@ setup(
             'algoneer = algoneer.cli.main:algoneer'
         ]
     },
-    description='A Python binding for our algorithm test kit Algoneer.',
-    long_description="""A Python binding for our algorithm test kit Algoneer.
+    description='A Python toolkit for testing algorithmic systems and machine learning models.',
+    long_description="""A Python toolkit for testing algorithmic systems and machine learning models.
 """
 )
