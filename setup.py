@@ -12,7 +12,9 @@ setup(
     packages=find_packages(),
     package_data={'': ['*.ini']},
     include_package_data=True,
-    install_requires=['click'],
+    install_requires=[
+        'click'
+    ],
     zip_safe=False,
     entry_points={
         'console_scripts': [
