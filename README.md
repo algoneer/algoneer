@@ -4,11 +4,16 @@ Algoneer is a Python toolkit to test algorithmic systems.
 
 ## Installing
 
-You can install Algonaut using pip:
+You can install the latest Algoneer version using pip:
+
+    pip install algoneer
+
+Alternatively, you can download this repository and install Algoneer directly
+from the main directory of the repository:
 
     pip install .
 
-When developing Algonaut, you can install the package in development mode,
+When developing Algoneer, you can install the package in development mode,
 which will not copy files but instead link them to your virtual environment
 so that you can edit them and see changes immediately:
 
@@ -17,12 +22,6 @@ so that you can edit them and see changes immediately:
 If you want to run tests, please also install test dependencies:
 
     pip install -r requirements-test.txt --no-index --find-links wheels
-
-## Algoneer CLI
-
-Algoneer comes with a handy command line utility that you can run as follows:
-
-    algoneer
 
 # Information For Developers
 
