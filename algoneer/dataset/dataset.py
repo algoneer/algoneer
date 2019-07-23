@@ -22,5 +22,3 @@ class DataSet:
 
     def __init__(self, source=Optional[Union["pandas.DataFrame", "numpy.ndarray"]]):
         pass
-
-ds = DataSet(pd.DataFrame())
