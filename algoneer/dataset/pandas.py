@@ -1,0 +1,54 @@
+from typing import Union, Optional, Mapping, Callable
+
+import pandas as pd
+import os
+import yaml
+
+from .dataset import DataSet
+from algoneer.dataschema import DataSchema
+
+class PandasDataSet(DataSet):
+
+    """
+    An implementation of a :class:`~algoneer.dataset.DataSet` object relying
+    on a :class:`pandas.DataFrame`.
+    """
+
+    def __init__(self, df : pd.DataFrame):
+        self._df = df
+
+    @property
+    def df(self):
+        return self._df
+
+    @staticmethod
+    def from_path(path : str) -> 'DataSet':
+        spec_filename = os.path.join(path, 'dataset.yml')
+
+        if not os.path.isfile(spec_filename):
+            raise IOError("file '{}' not found".format(spec_filename))
+
+        with open(spec_filename) as spec_file:
+            d = spec_file.read()
+
+        c = yaml.load(d, Loader=yaml.BaseLoader)
+        l = c.get('loader', {})
+        t = l.get('type')
+        a = l.get('args', {})
+
+        if t == 'csv':
+            df = pd.read_csv(os.path.join(path, a.get('filename')))
+        else:
+            raise ValueError("no loader for type {}".format(t))
+
+        ds = PandasDataSet(df)
+
+        schema = DataSchema(c.get('schema', {}))
+
+        ds.enforce_schema(schema)
+
+        return ds
+
+    def enforce_schema(self, schema: DataSchema) -> None:
+        pass
+ 

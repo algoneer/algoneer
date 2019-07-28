@@ -8,7 +8,7 @@ setup(
     author="Andreas Dewes",
     author_email="andreas.dewes@algoneer.org",
     license="GNU Affero General Public License - Version 3 (AGPL-3)",
-    url="https://github.com/algoneer/algoneer-py",
+    url="https://github.com/algoneer/algoneer",
     packages=find_packages(),
     package_data={"": ["*.ini"]},
     include_package_data=True,

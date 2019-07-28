@@ -1,24 +1,16 @@
-from typing import Union, Optional
+from algoneer.dataschema import DataSchema
+import abc
 
-try:
-    import pandas as pd
-
-    with_pandas = True
-except ImportError:
-    with_pandas = False
-
-try:
-    import numpy as np
-
-    with_numpy = True
-except ImportError:
-    with_numpy = False
-
-
-class DataSet:
+class DataSet(abc.ABC):
 
     """Describes a collection of :class:`~algoneer.datapoint.DataPoint` objects.
     """
 
-    def __init__(self, source=Optional[Union["pandas.DataFrame", "numpy.ndarray"]]):
+    @abc.abstractmethod
+    def enforce_schema(self, schema: DataSchema) -> None:
+        pass
+    
+    @staticmethod
+    @abc.abstractmethod
+    def from_path(path: str) -> 'DataSet':
         pass
