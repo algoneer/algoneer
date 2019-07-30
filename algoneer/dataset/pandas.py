@@ -1,5 +1,6 @@
 from typing import Optional, List
 
+import functools
 import pandas as pd
 import os
 import yaml
@@ -48,6 +49,27 @@ class PandasAttribute:
         self._column = column
 
 
+def convert_attributes(f):
+    @functools.wraps(f)
+    def convert(self, *args, **kwargs):
+        nargs = []
+        nkwargs = {}
+        for arg in args:
+            if isinstance(arg, PandasAttribute):
+                nargs.append(arg.column)
+            else:
+                nargs.append(arg)
+
+        for k, v in kwargs.items():
+            if isinstance(arg, PandasAttribute):
+                nkwargs[k] = v.column
+            else:
+                nkwargs[k] = v
+        return f(self, *args, **kwargs)
+
+    return convert
+
+
 class PandasDataSet(DataSet):
 
     """
@@ -56,27 +78,59 @@ class PandasDataSet(DataSet):
     """
 
     def __init__(self, df: pd.DataFrame) -> None:
-        self._df = df
         attributes: List[PandasAttribute] = []
         for column in df.columns:
             attributes.append(PandasAttribute(self, column))
-        self._attributes = attributes
+
+        # we need to use super() since we overwrote __getattr__
+
+        super().__setattr__("_df", df)
+        super().__setattr__("_attributes", attributes)
 
     @property
     def df(self) -> pd.DataFrame:
         return self._df
 
-    def __getitem__(self, *args, **kwargs):
-        return self._df.__getitem__(*args, **kwargs)
+    @convert_attributes
+    def __getitem__(self, item):
+        return self._df.__getitem__(item)
 
-    def __setitem__(self, *args, **kwargs):
-        return self._df.__setitem__(*args, **kwargs)
+    @convert_attributes
+    def __setitem__(self, item, value):
+        return self._df.__setitem__(item, value)
 
-    def enforce_schema(self, schema: DataSchema) -> None:
-        pass
+    @convert_attributes
+    def __delitem__(self, item):
+        return self._df.__delitem(item)
+
+    def __getattr__(self, attr):
+        return getattr(self._df, attr)
+
+    def __setattr__(self, attr, value):
+        return setattr(self._df, attr, value)
+
+    @property
+    def schema(self) -> DataSchema:
+        return self._schema
+
+    @schema.setter
+    def schema(self, schema: DataSchema) -> None:
+        self._schema = schema
+
+    def validate(self) -> bool:
+        """
+        Validates the dataset against the given dataschema. Transforms
+        attributes where necessary.
+        """
+        return False
 
     def copy(self) -> "PandasDataSet":
+
+        # we initialize a new dataset with a copy of the dataframe
         ds = PandasDataSet(self._df.copy())
+        # we copy the schema as well
+        ds.schema = self.schema
+
         return ds
 
     @property
@@ -118,8 +172,10 @@ class PandasDataSet(DataSet):
 
         ds = PandasDataSet(df)
 
-        schema = DataSchema(c.get("schema", {}))
+        # we assign the data schema to the dataset
+        ds.schema = DataSchema(c.get("schema", {}))
 
-        ds.enforce_schema(schema)
+        # we validate the data schema
+        ds.validate()
 
         return ds

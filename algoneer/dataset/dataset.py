@@ -14,10 +14,20 @@ class DataSet(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def enforce_schema(self, schema: DataSchema) -> None:
+    def validate(self) -> bool:
         pass
 
     @property
     @abc.abstractmethod
     def attributes(self):
         return self._attributes
+
+    @property  # type: ignore
+    @abc.abstractmethod
+    def schema(self) -> DataSchema:
+        pass
+
+    @schema.setter  # type: ignore
+    @abc.abstractmethod
+    def schema(self, schema: DataSchema) -> None:
+        pass
