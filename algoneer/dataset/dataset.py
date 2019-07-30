@@ -14,3 +14,8 @@ class DataSet(abc.ABC):
     @abc.abstractmethod
     def from_path(path: str) -> 'DataSet':
         pass
+
+    @property
+    @abc.abstractmethod
+    def attributes(self):
+        return self._attributes

@@ -19,36 +19,36 @@ class PDP(ModelTest):
         super().__init__()
 
     def run(
-        self, model: Model, dataset: DataSet, features: Optional[Sequence[str]] = None
+        self, model: Model, dataset: DataSet, attributes: Optional[Sequence[str]] = None
     ):
         """
         Run the test.
 
         :param    model: The model for which to generate the PDP.
         :param  dataset: The dataset for which to generate the PDP.
-        :param features: The features for which to generate the PDP. Optional.
+        :param attributes: The attributes for which to generate the PDP. Optional.
         """
 
-        def pdp(ds, model, feature):
+        def pdp(ds, model, attribute):
             """
-            Generate the partial dependence for a categorical feature
+            Generate the partial dependence for a categorical attribute
             """
-            values = dataset[feature]
-            if feature.is_categorical or feature.is_ordinal:
-                # we get all unique values for the feature
+            values = dataset[attribute]
+            if attribute.is_categorical or attribute.is_ordinal:
+                # we get all unique values for the attribute
                 vs = values.unique()
-            elif feature.is_numerical:
+            elif attribute.is_numerical:
                 vs = values.unique()
             else:
-                raise ValueError("unknown feature type: {}".format(feature.type))
+                raise ValueError("unknown attribute type: {}".format(attribute.type))
 
             vs.assign(pdp=0)
 
             for i, v in vs.iterrows():
                 # we make a copy of the dataset (this might be expensive)
                 nds = ds.copy()
-                # we replace all values of the feature by v
-                nds[feature] = v
+                # we replace all values of the attribute by v
+                nds[attribute] = v
                 # we compute the prediction of the model for the modified data
                 y = model.predict(nds)
                 if model.is_classifier:
@@ -64,9 +64,9 @@ class PDP(ModelTest):
         # we store PDPs in a simple dict
         pdps = {}
 
-        # we generate a partial dependence plot for every feature
-        for feature in dataset.features:
-            pdps[feature] = pdp(dataset, model, feature)
+        # we generate a partial dependence plot for every attribute
+        for attribute in dataset.attributes:
+            pdps[attribute] = pdp(dataset, model, attribute)
 
         # we return the PDPs
         return pdps

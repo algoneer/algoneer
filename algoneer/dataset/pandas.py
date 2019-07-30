@@ -5,7 +5,14 @@ import os
 import yaml
 
 from .dataset import DataSet
-from algoneer.dataschema import DataSchema
+from algoneer.dataschema import DataSchema, AttributeSchema
+
+class PandasAttribute:
+    
+    def __init__(self, dataset : PandasDataSet, column : str, schema : Optional[AttributeSchema] = None):
+        self._dataset = dataset
+        self._schema = schema
+        self._column = column
 
 class PandasDataSet(DataSet):
 
@@ -16,6 +23,10 @@ class PandasDataSet(DataSet):
 
     def __init__(self, df : pd.DataFrame):
         self._df = df
+        attributes = []
+        for column in df.columns:
+            attributes.append(PandasAttribute(self, column))
+        self._attributes = attributes
 
     @property
     def df(self):
@@ -52,3 +63,6 @@ class PandasDataSet(DataSet):
     def enforce_schema(self, schema: DataSchema) -> None:
         pass
  
+    @property
+    def attributes(self):
+        return self._attributes
