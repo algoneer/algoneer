@@ -5,7 +5,19 @@ import os
 import yaml
 
 from .dataset import DataSet
+from .roles import Roles
 from algoneer.dataschema import DataSchema, AttributeSchema
+
+class PandasRoles(Roles):
+
+    def __init__(self, dataset : 'PandasDataSet') -> None:
+        self._dataset = dataset
+
+    def __getattr__(self, attr) -> 'PandasDataSet':
+        """
+        We return a dataset with all attributes that have the given role
+        """
+        return self._dataset
 
 class PandasAttribute:
     
@@ -44,9 +56,40 @@ class PandasDataSet(DataSet):
             attributes.append(PandasAttribute(self, column))
         self._attributes = attributes
 
+
     @property
     def df(self) -> pd.DataFrame:
         return self._df
+
+    def __getitem__(self, *args, **kwargs):
+        return self._df.__getitem__(*args, **kwargs)
+
+    def __setitem__(self, *args, **kwargs):
+        return self._df.__setitem__(*args, **kwargs)
+
+    def enforce_schema(self, schema: DataSchema) -> None:
+        pass
+
+    def copy(self) -> 'PandasDataSet':
+        ds = PandasDataSet(self._df.copy())
+        return ds
+ 
+    @property
+    def attributes(self) -> List[PandasAttribute]:
+        return self._attributes
+
+    @property
+    def roles(self) -> PandasRoles:
+        return PandasRoles(self)
+
+    # Static helper methods (to create PandasDataSet objects)
+
+    @staticmethod
+    def from_dataset(dataset : DataSet) -> 'PandasDataSet':
+        if not isinstance(dataset, PandasDataSet):
+            raise ValueError("cannot convert to PandasDataSet right now")
+        # we simply make a copy of the dataset
+        return dataset.copy()
 
     @staticmethod
     def from_path(path : str) -> 'PandasDataSet':
@@ -75,10 +118,3 @@ class PandasDataSet(DataSet):
         ds.enforce_schema(schema)
 
         return ds
-
-    def enforce_schema(self, schema: DataSchema) -> None:
-        pass
- 
-    @property
-    def attributes(self) -> List[PandasAttribute]:
-        return self._attributes
