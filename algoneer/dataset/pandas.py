@@ -1,4 +1,4 @@
-from typing import Union, Optional, Mapping, Callable
+from typing import Optional, List
 
 import pandas as pd
 import os
@@ -9,9 +9,25 @@ from algoneer.dataschema import DataSchema, AttributeSchema
 
 class PandasAttribute:
     
-    def __init__(self, dataset : PandasDataSet, column : str, schema : Optional[AttributeSchema] = None):
+    def __init__(self, dataset : 'PandasDataSet', column : str, schema : Optional[AttributeSchema] = None) -> None:
         self._dataset = dataset
         self._schema = schema
+        self._column = column
+
+    @property
+    def schema(self) -> Optional[AttributeSchema]:
+        return self._schema
+
+    @schema.setter
+    def schema(self, schema : AttributeSchema) -> None:
+        self._schema = schema
+
+    @property
+    def column(self) -> str:
+        return self._column
+
+    @column.setter
+    def column(self, column :str) -> None:
         self._column = column
 
 class PandasDataSet(DataSet):
@@ -21,19 +37,19 @@ class PandasDataSet(DataSet):
     on a :class:`pandas.DataFrame`.
     """
 
-    def __init__(self, df : pd.DataFrame):
+    def __init__(self, df : pd.DataFrame) -> None:
         self._df = df
-        attributes = []
+        attributes : List[PandasAttribute] = []
         for column in df.columns:
             attributes.append(PandasAttribute(self, column))
         self._attributes = attributes
 
     @property
-    def df(self):
+    def df(self) -> pd.DataFrame:
         return self._df
 
     @staticmethod
-    def from_path(path : str) -> 'DataSet':
+    def from_path(path : str) -> 'PandasDataSet':
         spec_filename = os.path.join(path, 'dataset.yml')
 
         if not os.path.isfile(spec_filename):
@@ -64,5 +80,5 @@ class PandasDataSet(DataSet):
         pass
  
     @property
-    def attributes(self):
+    def attributes(self) -> List[PandasAttribute]:
         return self._attributes

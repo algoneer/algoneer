@@ -12,7 +12,7 @@ setup(
     packages=find_packages(),
     package_data={"": ["*.ini"]},
     include_package_data=True,
-    install_requires=["click"],
+    install_requires=["click", "pyyaml"],
     zip_safe=False,
     entry_points={"console_scripts": ["algoneer = algoneer.cli.main:algoneer"]},
     description="A Python toolkit for testing algorithmic systems and machine learning models.",
