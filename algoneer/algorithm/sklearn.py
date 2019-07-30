@@ -8,12 +8,12 @@ from algoneer.dataset import DataSet
 from algoneer.model.sklearn import SklearnModel
 from algoneer.model import Model
 
+
 class SklearnAlgorithm(Algorithm):
-    
     def __init__(self, estimator: sklearn.base.BaseEstimator):
         self._estimator = estimator
 
-    def fit(self, dataset : DataSet) -> Model:
+    def fit(self, dataset: DataSet) -> Model:
         """
         Fits a dataset to the estimator. To do this, we convert the dataset
         into a pandas dataframe first.

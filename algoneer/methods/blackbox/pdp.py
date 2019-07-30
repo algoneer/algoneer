@@ -9,6 +9,7 @@ learning models.
 from typing import Sequence, Optional
 from algoneer import DataSet, Model, ModelTest
 
+
 class PDP(ModelTest):
 
     """
@@ -54,10 +55,10 @@ class PDP(ModelTest):
                 if model.is_classifier:
                     # to do: handle multi-class classifiers
                     # if this is a classifier we calculate the probability
-                    vs[i, 'pdp'] = y.sum()/len(y)
+                    vs[i, "pdp"] = y.sum() / len(y)
                 elif model.is_regression:
                     # if this is a regression, we calculate the mean value
-                    vs[i, 'pdp'] = y.mean()
+                    vs[i, "pdp"] = y.mean()
 
             return vs
 

@@ -1,2 +1,2 @@
-class AttributeSchema:  
+class AttributeSchema:
     pass

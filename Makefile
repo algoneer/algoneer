@@ -1,6 +1,10 @@
 TESTARGS := ${testargs}
 
-all: mypy test
+all: format mypy test
+
+format:
+	black algoneer/
+	black examples/
 
 mypy:
 	mypy algoneer/

@@ -6,28 +6,30 @@ from ..dataschema import AttributeSchema
 
 import abc
 
-class Attribute(abc.ABC):
 
+class Attribute(abc.ABC):
     @abc.abstractmethod
-    def __init__(self, dataset: DataSet, column : str, schema : Optional[AttributeSchema]) -> None:
+    def __init__(
+        self, dataset: DataSet, column: str, schema: Optional[AttributeSchema]
+    ) -> None:
         pass
 
-    @property # type: ignore
+    @property  # type: ignore
     @abc.abstractmethod
     def column(self) -> str:
         pass
 
-    @column.setter # type: ignore
+    @column.setter  # type: ignore
     @abc.abstractmethod
-    def column(self, column : str) -> None:
+    def column(self, column: str) -> None:
         pass
 
-    @property # type: ignore
+    @property  # type: ignore
     @abc.abstractmethod
     def schema(self) -> Optional[AttributeSchema]:
         pass
 
-    @schema.setter # type: ignore
+    @schema.setter  # type: ignore
     @abc.abstractmethod
-    def schema(self, schema : Optional[AttributeSchema]) -> None:
+    def schema(self, schema: Optional[AttributeSchema]) -> None:
         pass
