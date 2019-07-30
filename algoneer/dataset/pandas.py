@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, Iterable
 
 import functools
 import pandas as pd
@@ -10,46 +10,7 @@ from .roles import Roles
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
-class PandasRoles(Roles):
-    def __init__(self, dataset: "PandasDataSet") -> None:
-        self._dataset = dataset
-
-    def __getattr__(self, attr) -> "PandasDataSet":
-        """
-        We return a dataset with all attributes that have the given role
-        """
-        return self._dataset
-
-
-class PandasAttribute:
-    def __init__(
-        self,
-        dataset: "PandasDataSet",
-        column: str,
-        schema: Optional[AttributeSchema] = None,
-    ) -> None:
-        self._dataset = dataset
-        self._schema = schema
-        self._column = column
-
-    @property
-    def schema(self) -> Optional[AttributeSchema]:
-        return self._schema
-
-    @schema.setter
-    def schema(self, schema: AttributeSchema) -> None:
-        self._schema = schema
-
-    @property
-    def column(self) -> str:
-        return self._column
-
-    @column.setter
-    def column(self, column: str) -> None:
-        self._column = column
-
-
-def convert_attributes(f):
+def proxy(f):
     @functools.wraps(f)
     def convert(self, *args, **kwargs):
         nargs = []
@@ -70,6 +31,67 @@ def convert_attributes(f):
     return convert
 
 
+class PandasRoles(Roles):
+    def __init__(self, dataset: "PandasDataSet") -> None:
+        self._dataset = dataset
+
+    def __getattr__(self, attr) -> "PandasDataSet":
+        """
+        We return a dataset with all attributes that have the given role
+        """
+        return self._dataset
+
+
+class PandasAttribute:
+    def __init__(
+        self,
+        dataset: "PandasDataSet",
+        series: pd.Series,
+        schema: Optional[AttributeSchema] = None,
+    ) -> None:
+
+        d = self.__dict__
+
+        d["_dataset"] = dataset
+        d["_schema"] = schema
+        d["_column"] = series.name
+        d["_series"] = series
+
+    @property
+    def schema(self) -> Optional[AttributeSchema]:
+        return self._schema
+
+    @schema.setter
+    def schema(self, schema: AttributeSchema) -> None:
+        self._schema = schema
+
+    @property
+    def column(self) -> str:
+        return self._column
+
+    @column.setter
+    def column(self, column: str) -> None:
+        self._column = column
+
+    @proxy
+    def __setitem__(self, item, value):
+        return self._series.__setitem__(item, value)
+
+    @proxy
+    def __delitem__(self, item):
+        return self._series.__delitem(item)
+
+    def __getattr__(self, attr):
+        v = getattr(self._series, attr)
+        # if this is a callable function we wrap it in a proxy decorator
+        if callable(v):
+            return proxy(v)
+        return v
+
+    def __setattr__(self, attr, value):
+        return setattr(self._series, attr, value)
+
+
 class PandasDataSet(DataSet):
 
     """
@@ -78,36 +100,45 @@ class PandasDataSet(DataSet):
     """
 
     def __init__(self, df: pd.DataFrame) -> None:
-        attributes: List[PandasAttribute] = []
-        for column in df.columns:
-            attributes.append(PandasAttribute(self, column))
-
         # we need to use super() since we overwrote __getattr__
-
-        super().__setattr__("_df", df)
-        super().__setattr__("_attributes", attributes)
+        self.__dict__["_df"] = df
 
     @property
     def df(self) -> pd.DataFrame:
         return self._df
 
-    @convert_attributes
+    @proxy
     def __getitem__(self, item):
-        return self._df.__getitem__(item)
+        v = self._df.__getitem__(item)
+        if isinstance(v, pd.DataFrame):
+            ds = PandasDataSet(v)
+            ds.schema = self.schema
+            return ds
+        elif isinstance(v, pd.Series):
+            return PandasAttribute(self, v)
+        return v
 
-    @convert_attributes
+    @proxy
     def __setitem__(self, item, value):
         return self._df.__setitem__(item, value)
 
-    @convert_attributes
+    @proxy
     def __delitem__(self, item):
         return self._df.__delitem(item)
 
     def __getattr__(self, attr):
-        return getattr(self._df, attr)
+        v = getattr(self._df, attr)
+        # if this is a callable function we wrap it in a proxy decorator
+        if callable(v):
+            return proxy(v)
+        return v
 
     def __setattr__(self, attr, value):
         return setattr(self._df, attr, value)
+
+    @property
+    def columns(self) -> Iterable[str]:
+        return self._df.columns
 
     @property
     def schema(self) -> DataSchema:
@@ -117,13 +148,6 @@ class PandasDataSet(DataSet):
     def schema(self, schema: DataSchema) -> None:
         self._schema = schema
 
-    def validate(self) -> bool:
-        """
-        Validates the dataset against the given dataschema. Transforms
-        attributes where necessary.
-        """
-        return False
-
     def copy(self) -> "PandasDataSet":
 
         # we initialize a new dataset with a copy of the dataframe
@@ -132,10 +156,6 @@ class PandasDataSet(DataSet):
         ds.schema = self.schema
 
         return ds
-
-    @property
-    def attributes(self) -> List[PandasAttribute]:
-        return self._attributes
 
     @property
     def roles(self) -> PandasRoles:
@@ -173,9 +193,10 @@ class PandasDataSet(DataSet):
         ds = PandasDataSet(df)
 
         # we assign the data schema to the dataset
-        ds.schema = DataSchema(c.get("schema", {}))
+        schema = DataSchema(c.get("schema", {}))
 
-        # we validate the data schema
-        ds.validate()
+        # we enforce the data schema on the dataset
+        schema.enforce(ds)
+        ds.schema = schema
 
         return ds

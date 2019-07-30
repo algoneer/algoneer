@@ -1,8 +1,9 @@
 from enum import Enum
 
-from typing import Mapping, Any
+from typing import Mapping, Iterable, Any
 
 import algoneer.dataschema as dataschema
+import algoneer.dataset as dataset
 
 
 class AttributeSchema:
@@ -27,3 +28,19 @@ class AttributeSchema:
         self._type = type
         self._column = column
         self._config = config
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def column(self):
+        return self._column
+
+    def enforce(self, ds: "dataset.DataSet"):
+        # we can test our luck...
+        ds[self.column] = ds[self.column].astype(self._type, **self.config)

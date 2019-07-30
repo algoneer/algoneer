@@ -30,16 +30,16 @@ class PDP(ModelTest):
         :param attributes: The attributes for which to generate the PDP. Optional.
         """
 
-        def pdp(ds, model, attribute):
+        def pdp(ds, model, column):
             """
             Generate the partial dependence for a categorical attribute
             """
-            values = dataset[attribute]
+            attribute = dataset[column]
             if attribute.is_categorical or attribute.is_ordinal:
                 # we get all unique values for the attribute
-                vs = values.unique()
+                vs = attribute.unique()
             elif attribute.is_numerical:
-                vs = values.unique()
+                vs = attribute.unique()
             else:
                 raise ValueError("unknown attribute type: {}".format(attribute.type))
 
@@ -49,7 +49,7 @@ class PDP(ModelTest):
                 # we make a copy of the dataset (this might be expensive)
                 nds = ds.copy()
                 # we replace all values of the attribute by v
-                nds[attribute] = v
+                nds[column] = v
                 # we compute the prediction of the model for the modified data
                 y = model.predict(nds)
                 if model.is_classifier:
@@ -65,9 +65,9 @@ class PDP(ModelTest):
         # we store PDPs in a simple dict
         pdps = {}
 
-        # we generate a partial dependence plot for every attribute
-        for attribute in dataset.attributes:
-            pdps[attribute] = pdp(dataset, model, attribute)
+        # we generate a partial dependence plot for every column
+        for column in dataset.columns:
+            pdps[column] = pdp(dataset, model, column)
 
         # we return the PDPs
         return pdps

@@ -2,6 +2,8 @@ from algoneer.dataschema import DataSchema
 from .roles import Roles
 import abc
 
+from typing import Iterable
+
 
 class DataSet(abc.ABC):
 
@@ -13,14 +15,10 @@ class DataSet(abc.ABC):
     def roles(self) -> Roles:
         pass
 
-    @abc.abstractmethod
-    def validate(self) -> bool:
-        pass
-
     @property
     @abc.abstractmethod
-    def attributes(self):
-        return self._attributes
+    def columns(self) -> Iterable[str]:
+        pass
 
     @property  # type: ignore
     @abc.abstractmethod
@@ -30,4 +28,24 @@ class DataSet(abc.ABC):
     @schema.setter  # type: ignore
     @abc.abstractmethod
     def schema(self, schema: DataSchema) -> None:
+        pass
+
+    @abc.abstractmethod
+    def __getitem__(self, item):
+        pass
+
+    @abc.abstractmethod
+    def __setitem__(self, item, value):
+        pass
+
+    @abc.abstractmethod
+    def __delitem__(self, item):
+        pass
+
+    @abc.abstractmethod
+    def __getattr__(self, attr):
+        pass
+
+    @abc.abstractmethod
+    def __setattr__(self, attr, value):
         pass
