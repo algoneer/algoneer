@@ -12,9 +12,8 @@ class DataSet(abc.ABC):
     """
 
     @property
-    @abc.abstractmethod
-    def roles(self) -> Roles:
-        pass
+    def roles(self):
+        return Roles(self)
 
     @property
     @abc.abstractmethod

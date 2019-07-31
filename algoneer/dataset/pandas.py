@@ -31,22 +31,6 @@ def proxy(f):
 
     return convert
 
-
-class PandasRoles(Roles):
-    def __init__(self, dataset: "PandasDataSet") -> None:
-        self._dataset = dataset
-
-    def __getattr__(self, role: str) -> "PandasDataSet":
-        """
-        We return a dataset with all attributes that have the given role
-        """
-        relevant_columns = []
-        for attribute in self._dataset.attributes:
-            if role in attribute.roles:
-                relevant_columns.append(attribute.column)
-        return self._dataset[relevant_columns]
-
-
 class PandasAttribute(Attribute):
     def __init__(
         self,
@@ -178,10 +162,6 @@ class PandasDataSet(DataSet):
         ds.schema = self.schema
 
         return ds
-
-    @property
-    def roles(self) -> PandasRoles:
-        return PandasRoles(self)
 
     def astype(self, type: str, **kwargs: Dict[str, Any]):
         pass
