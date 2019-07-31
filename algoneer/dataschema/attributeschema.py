@@ -49,4 +49,4 @@ class AttributeSchema:
 
     def enforce(self, ds: "dataset.DataSet"):
         # we can test our luck...
-        ds[self.column] = ds[self.column].astype(self._type, **self.config)
+        ds[self.column] = ds[self.column].astype(self._type, config=self.config)

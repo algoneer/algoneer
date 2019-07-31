@@ -18,6 +18,7 @@ class SklearnAlgorithm(Algorithm):
         Fits a dataset to the estimator. To do this, we convert the dataset
         into a pandas dataframe first.
         """
+
         pd_dataset = PandasDataSet.from_dataset(dataset)
 
         # we get the attributes that have the "x" role assigned to them

@@ -1,4 +1,4 @@
-from typing import Mapping, Any
+from typing import Mapping, Dict, Any
 
 from .attributeschema import AttributeSchema
 import algoneer.dataset as dataset
@@ -10,8 +10,12 @@ class DataSchema:
         self._attributes = parse_attributes(self, schema)
 
     def enforce(self, ds: "dataset.DataSet"):
-        for attribute in self._attributes:
+        for key, attribute in self._attributes.items():
             attribute.enforce(ds)
+
+    @property
+    def attributes(self) -> Mapping[str, AttributeSchema]:
+        return self._attributes
 
 
 def parse_schema(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
@@ -20,7 +24,7 @@ def parse_schema(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
 
 def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
 
-    attributes = []
+    attributes: Dict[str, AttributeSchema] = {}
     for key, attribute in schema.get("attributes", {}).items():
         typestring = attribute.get("type", "unknown")
         try:
@@ -29,7 +33,7 @@ def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
             _type = AttributeSchema.Type.Unknown
         config = attribute.get("config", {})
         roles = attribute.get("roles", [])
-        attributes.append(
-            AttributeSchema(ds, column=key, type=_type, config=config, roles=roles)
+        attributes[key] = AttributeSchema(
+            ds, column=key, type=_type, config=config, roles=roles
         )
     return attributes

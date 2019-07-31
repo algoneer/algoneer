@@ -1,4 +1,4 @@
-from typing import Optional, Iterable, Dict, Any, List
+from typing import Optional, Mapping, Iterable, Dict, Any, List
 
 import functools
 import pandas as pd
@@ -16,20 +16,24 @@ def proxy(f):
     def convert(self, *args, **kwargs):
         nargs = []
         nkwargs = {}
-        for arg in args:
+
+        def conv(arg: Any) -> Any:
             if isinstance(arg, PandasAttribute):
-                nargs.append(arg.column)
-            else:
-                nargs.append(arg)
+                return arg.series
+            elif isinstance(arg, PandasDataSet):
+                return arg.df
+            return arg
+
+        for arg in args:
+            nargs.append(conv(arg))
 
         for k, v in kwargs.items():
-            if isinstance(arg, PandasAttribute):
-                nkwargs[k] = v.column
-            else:
-                nkwargs[k] = v
-        return f(self, *args, **kwargs)
+            nkwargs[k] = conv(v)
+
+        return f(self, *nargs, **nkwargs)
 
     return convert
+
 
 class PandasAttribute(Attribute):
     def __init__(
@@ -68,6 +72,10 @@ class PandasAttribute(Attribute):
     def column(self, column: str) -> None:
         self._column = column
 
+    @property
+    def series(self) -> pd.Series:
+        return self._series
+
     @proxy
     def __setitem__(self, item, value):
         return self._series.__setitem__(item, value)
@@ -83,11 +91,8 @@ class PandasAttribute(Attribute):
             return proxy(v)
         return v
 
-    def __setattr__(self, attr, value):
-        return setattr(self._series, attr, value)
-
-    def astype(self, type: str, **kwargs: Dict[str, Any]):
-        pass
+    def astype(self, type: str, config: Dict[str, Any]):
+        return self
 
 
 class PandasDataSet(DataSet):
@@ -100,9 +105,20 @@ class PandasDataSet(DataSet):
     def __init__(self, df: pd.DataFrame) -> None:
         # we need to use __dict__ since we overwrote the __getattr__ function
         self.__dict__["_df"] = df
-        attributes: List[PandasAttribute] = []
+        self.__dict__["_schema"] = None
+        self._generate_attributes()
+
+    def _generate_attributes(self) -> None:
+        attributes: Dict[str, PandasAttribute] = {}
+        schema = self.schema
         for column in self.columns:
-            attributes.append(PandasAttribute(self, df[column]))
+            if schema:
+                attributeschema = schema.attributes.get(column)
+            else:
+                attributeschema = None
+            attributes[column] = PandasAttribute(
+                self, self._df[column], attributeschema
+            )
         self.__dict__["_attributes"] = attributes
 
     @property
@@ -135,15 +151,12 @@ class PandasDataSet(DataSet):
             return proxy(v)
         return v
 
-    def __setattr__(self, attr, value):
-        return setattr(self._df, attr, value)
-
     @property
     def columns(self) -> Iterable[str]:
         return self._df.columns
 
     @property
-    def attributes(self) -> Iterable[PandasAttribute]:
+    def attributes(self) -> Mapping[str, PandasAttribute]:
         return self._attributes
 
     @property
@@ -153,6 +166,8 @@ class PandasDataSet(DataSet):
     @schema.setter
     def schema(self, schema: DataSchema) -> None:
         self._schema = schema
+        # we regenerate the attributes
+        self._generate_attributes()
 
     def copy(self) -> "PandasDataSet":
 

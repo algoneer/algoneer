@@ -3,7 +3,7 @@ from .roles import Roles
 from .attribute import Attribute
 import abc
 
-from typing import Iterable
+from typing import Iterable, Mapping
 
 
 class DataSet(abc.ABC):
@@ -22,16 +22,14 @@ class DataSet(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def attributes(self) -> Iterable[Attribute]:
+    def attributes(self) -> Mapping[str, Attribute]:
         pass
 
     @property  # type: ignore
-    @abc.abstractmethod
     def schema(self) -> DataSchema:
         pass
 
     @schema.setter  # type: ignore
-    @abc.abstractmethod
     def schema(self, schema: DataSchema) -> None:
         pass
 
@@ -49,8 +47,4 @@ class DataSet(abc.ABC):
 
     @abc.abstractmethod
     def __getattr__(self, attr):
-        pass
-
-    @abc.abstractmethod
-    def __setattr__(self, attr, value):
         pass
