@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Dict, Any, List
 
 import functools
 import pandas as pd
@@ -7,6 +7,7 @@ import yaml
 
 from .dataset import DataSet
 from .roles import Roles
+from .attribute import Attribute
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
@@ -35,14 +36,18 @@ class PandasRoles(Roles):
     def __init__(self, dataset: "PandasDataSet") -> None:
         self._dataset = dataset
 
-    def __getattr__(self, attr) -> "PandasDataSet":
+    def __getattr__(self, role: str) -> "PandasDataSet":
         """
         We return a dataset with all attributes that have the given role
         """
-        return self._dataset
+        relevant_columns = []
+        for attribute in self._dataset.attributes:
+            if role in attribute.roles:
+                relevant_columns.append(attribute.column)
+        return self._dataset[relevant_columns]
 
 
-class PandasAttribute:
+class PandasAttribute(Attribute):
     def __init__(
         self,
         dataset: "PandasDataSet",
@@ -62,8 +67,14 @@ class PandasAttribute:
         return self._schema
 
     @schema.setter
-    def schema(self, schema: AttributeSchema) -> None:
+    def schema(self, schema: Optional[AttributeSchema]) -> None:
         self._schema = schema
+
+    @property
+    def roles(self) -> Iterable[str]:
+        if self._schema is None:
+            return []
+        return self._schema.roles
 
     @property
     def column(self) -> str:
@@ -91,6 +102,9 @@ class PandasAttribute:
     def __setattr__(self, attr, value):
         return setattr(self._series, attr, value)
 
+    def astype(self, type: str, **kwargs: Dict[str, Any]):
+        pass
+
 
 class PandasDataSet(DataSet):
 
@@ -100,8 +114,12 @@ class PandasDataSet(DataSet):
     """
 
     def __init__(self, df: pd.DataFrame) -> None:
-        # we need to use super() since we overwrote __getattr__
+        # we need to use __dict__ since we overwrote the __getattr__ function
         self.__dict__["_df"] = df
+        attributes: List[PandasAttribute] = []
+        for column in self.columns:
+            attributes.append(PandasAttribute(self, df[column]))
+        self.__dict__["_attributes"] = attributes
 
     @property
     def df(self) -> pd.DataFrame:
@@ -141,6 +159,10 @@ class PandasDataSet(DataSet):
         return self._df.columns
 
     @property
+    def attributes(self) -> Iterable[PandasAttribute]:
+        return self._attributes
+
+    @property
     def schema(self) -> DataSchema:
         return self._schema
 
@@ -160,6 +182,9 @@ class PandasDataSet(DataSet):
     @property
     def roles(self) -> PandasRoles:
         return PandasRoles(self)
+
+    def astype(self, type: str, **kwargs: Dict[str, Any]):
+        pass
 
     # Static helper methods (to create PandasDataSet objects)
 

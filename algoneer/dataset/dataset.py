@@ -1,5 +1,6 @@
 from algoneer.dataschema import DataSchema
 from .roles import Roles
+from .attribute import Attribute
 import abc
 
 from typing import Iterable
@@ -18,6 +19,11 @@ class DataSet(abc.ABC):
     @property
     @abc.abstractmethod
     def columns(self) -> Iterable[str]:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def attributes(self) -> Iterable[Attribute]:
         pass
 
     @property  # type: ignore

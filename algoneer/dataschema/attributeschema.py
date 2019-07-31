@@ -21,12 +21,14 @@ class AttributeSchema:
         self,
         ds: "dataschema.DataSchema",
         column: str,
+        roles: Iterable[str],
         type: Type,
         config: Mapping[str, Any],
     ) -> None:
         self._ds = ds
         self._type = type
         self._column = column
+        self._roles = roles
         self._config = config
 
     @property
@@ -36,6 +38,10 @@ class AttributeSchema:
     @property
     def type(self):
         return self._type
+
+    @property
+    def roles(self):
+        return self._roles
 
     @property
     def column(self):

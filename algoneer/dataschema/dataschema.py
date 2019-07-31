@@ -28,5 +28,8 @@ def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
         except KeyError:
             _type = AttributeSchema.Type.Unknown
         config = attribute.get("config", {})
-        attributes.append(AttributeSchema(ds, column=key, type=_type, config=config))
+        roles = attribute.get("roles", [])
+        attributes.append(
+            AttributeSchema(ds, column=key, type=_type, config=config, roles=roles)
+        )
     return attributes
