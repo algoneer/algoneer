@@ -5,12 +5,14 @@ import sklearn
 
 from algoneer.dataset.pandas import PandasDataSet
 from algoneer.dataset import DataSet, Attribute
+from algoneer.algorithm import Algorithm
 
 from typing import Union
 
 
 class SklearnModel(Model):
-    def __init__(self, estimator: sklearn.base.BaseEstimator):
+    def __init__(self, algorithm: Algorithm, estimator: sklearn.base.BaseEstimator):
+        super().__init__(algorithm=algorithm)
         self._estimator = estimator
 
     def predict(self, dataset: DataSet) -> Union[DataSet, Attribute]:

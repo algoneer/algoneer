@@ -46,5 +46,5 @@ class DataSet(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def __getattr__(self, attr):
+    def __len__(self) -> int:
         pass

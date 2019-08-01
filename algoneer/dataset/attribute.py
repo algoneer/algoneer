@@ -46,3 +46,7 @@ class Attribute(abc.ABC):
     @abc.abstractmethod
     def schema(self, schema: Optional[AttributeSchema]) -> None:
         pass
+
+    @abc.abstractmethod
+    def __len__(self) -> int:
+        pass

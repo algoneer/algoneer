@@ -2,16 +2,30 @@ from .algorithm import Algorithm
 
 import sklearn
 
+from algoneer.algorithmschema import AlgorithmSchema
 from algoneer.dataset.pandas import PandasDataSet
 from algoneer.dataset import DataSet
 
 from algoneer.model.sklearn import SklearnModel
 from algoneer.model import Model
+import sklearn.base as base  # type: ignore
+
+from typing import Optional
 
 
 class SklearnAlgorithm(Algorithm):
     def __init__(self, estimator: sklearn.base.BaseEstimator):
         self._estimator = estimator
+
+        schema: Optional[AlgorithmSchema] = None
+        if isinstance(estimator, base.ClassifierMixin):
+            schema = AlgorithmSchema(type=AlgorithmSchema.Type.Classifier)
+        elif isinstance(estimator, base.RegressorMixin):
+            schema = AlgorithmSchema(type=AlgorithmSchema.Type.Regressor)
+        elif isinstance(estimator, base.ClusterMixin):
+            schema = AlgorithmSchema(type=AlgorithmSchema.Type.Cluster)
+
+        super().__init__(schema=schema)
 
     def fit(self, dataset: DataSet) -> Model:
         """
@@ -33,4 +47,4 @@ class SklearnAlgorithm(Algorithm):
         # we fit the estimator with the x and y dataframes
         estimator.fit(x.df, y.df)
 
-        return SklearnModel(estimator)
+        return SklearnModel(self, estimator)

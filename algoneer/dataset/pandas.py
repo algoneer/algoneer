@@ -90,6 +90,9 @@ class PandasAttribute(Attribute):
     def __delitem__(self, item):
         return self._series.__delitem(item)
 
+    def __len__(self) -> int:
+        return len(self._series)
+
     def __getattr__(self, attr):
 
         try:
@@ -158,6 +161,9 @@ class PandasDataSet(DataSet):
     @proxy
     def __delitem__(self, item):
         return self._df.__delitem(item)
+
+    def __len__(self) -> int:
+        return len(self._df)
 
     def __getattr__(self, attr):
 
