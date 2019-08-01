@@ -1,7 +1,7 @@
 from typing import Mapping, Dict, Any
 
 from .attributeschema import AttributeSchema
-import algoneer.dataset as dataset
+import algoneer.dataset
 
 
 class DataSchema:
@@ -9,7 +9,7 @@ class DataSchema:
         self._schema = parse_schema(self, schema)
         self._attributes = parse_attributes(self, schema)
 
-    def enforce(self, ds: "dataset.DataSet"):
+    def enforce(self, ds: "algoneer.dataset.DataSet"):
         for key, attribute in self._attributes.items():
             attribute.enforce(ds)
 

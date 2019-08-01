@@ -1,6 +1,6 @@
 import abc
 
-import algoneer.model as model
+import algoneer.model
 from algoneer.dataset import DataSet
 from algoneer.algorithmschema import AlgorithmSchema
 
@@ -28,5 +28,5 @@ class Algorithm(abc.ABC):
         self.schema = schema
 
     @abc.abstractmethod
-    def fit(self, data: DataSet) -> "model.Model":
+    def fit(self, data: DataSet) -> "algoneer.model.Model":
         pass

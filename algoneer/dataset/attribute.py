@@ -1,4 +1,4 @@
-import algoneer.dataset as dataset
+import algoneer.dataset
 
 from typing import Optional, Iterable
 
@@ -10,7 +10,10 @@ import abc
 class Attribute(abc.ABC):
     @abc.abstractmethod
     def __init__(
-        self, dataset: "dataset.DataSet", column: str, schema: Optional[AttributeSchema]
+        self,
+        dataset: "algoneer.dataset.DataSet",
+        column: str,
+        schema: Optional[AttributeSchema],
     ) -> None:
         pass
 
