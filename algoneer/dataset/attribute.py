@@ -14,6 +14,14 @@ class Attribute(abc.ABC):
     ) -> None:
         pass
 
+    def __getattr__(self, attr):
+        if attr.startswith("is_"):
+            _type = attr[3:]
+            if self.schema is not None and self.schema.type.name.lower() == _type:
+                return True
+            return False
+        return super().__getattr__(attr)
+
     @property  # type: ignore
     @abc.abstractmethod
     def column(self) -> str:

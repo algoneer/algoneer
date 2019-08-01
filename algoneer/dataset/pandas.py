@@ -11,11 +11,14 @@ from .attribute import Attribute
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
-def proxy(f):
+def proxy(f, bound=True):
     @functools.wraps(f)
-    def convert(self, *args, **kwargs):
+    def convert(*args, **kwargs):
         nargs = []
         nkwargs = {}
+
+        if bound:
+            self, args = args[0], args[1:]
 
         def conv(arg: Any) -> Any:
             if isinstance(arg, PandasAttribute):
@@ -30,7 +33,10 @@ def proxy(f):
         for k, v in kwargs.items():
             nkwargs[k] = conv(v)
 
-        return f(self, *nargs, **nkwargs)
+        if bound:
+            return f(self, *nargs, **nkwargs)
+        else:
+            return f(*nargs, **nkwargs)
 
     return convert
 
@@ -85,10 +91,16 @@ class PandasAttribute(Attribute):
         return self._series.__delitem(item)
 
     def __getattr__(self, attr):
+
+        try:
+            return super().__getattr__(attr)
+        except AttributeError:
+            pass
+
         v = getattr(self._series, attr)
         # if this is a callable function we wrap it in a proxy decorator
         if callable(v):
-            return proxy(v)
+            return proxy(v, bound=False)
         return v
 
     def astype(self, type: str, config: Dict[str, Any]):
@@ -133,7 +145,10 @@ class PandasDataSet(DataSet):
             ds.schema = self.schema
             return ds
         elif isinstance(v, pd.Series):
-            return PandasAttribute(self, v)
+            schema = None
+            if self.schema is not None:
+                schema = self.schema.attributes.get(v.name)
+            return PandasAttribute(self, v, schema)
         return v
 
     @proxy
@@ -145,10 +160,16 @@ class PandasDataSet(DataSet):
         return self._df.__delitem(item)
 
     def __getattr__(self, attr):
+
+        try:
+            return super().__getattr__(attr)
+        except AttributeError:
+            pass
+
         v = getattr(self._df, attr)
         # if this is a callable function we wrap it in a proxy decorator
         if callable(v):
-            return proxy(v)
+            return proxy(v, bound=False)
         return v
 
     @property

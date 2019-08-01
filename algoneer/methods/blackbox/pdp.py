@@ -9,6 +9,8 @@ learning models.
 from typing import Sequence, Optional
 from algoneer import DataSet, Model, ModelTest
 
+import logging
+
 
 class PDP(ModelTest):
 
@@ -39,28 +41,34 @@ class PDP(ModelTest):
                 # we get all unique values for the attribute
                 vs = attribute.unique()
             elif attribute.is_numerical:
+                print("numerical!")
                 vs = attribute.unique()
             else:
-                raise ValueError("unknown attribute type: {}".format(attribute.type))
+                self.log(
+                    logging.WARNING,
+                    "unknown attribute type for column: {}".format(attribute.column),
+                )
+                return
 
-            vs.assign(pdp=0)
+            ys = []
 
-            for i, v in vs.iterrows():
+            for v in vs:
                 # we make a copy of the dataset (this might be expensive)
                 nds = ds.copy()
                 # we replace all values of the attribute by v
                 nds[column] = v
                 # we compute the prediction of the model for the modified data
                 y = model.predict(nds)
+
                 if model.is_classifier:
                     # to do: handle multi-class classifiers
                     # if this is a classifier we calculate the probability
-                    vs[i, "pdp"] = y.sum() / len(y)
+                    ys.append(y.sum() / len(y))
                 elif model.is_regression:
                     # if this is a regression, we calculate the mean value
-                    vs[i, "pdp"] = y.mean()
+                    ys.append(y.mean)
 
-            return vs
+            return uniques, ys
 
         # we store PDPs in a simple dict
         pdps = {}
@@ -68,6 +76,8 @@ class PDP(ModelTest):
         # we generate a partial dependence plot for every column
         for column in dataset.columns:
             pdps[column] = pdp(dataset, model, column)
+
+        print(pdps)
 
         # we return the PDPs
         return pdps
