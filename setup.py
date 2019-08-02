@@ -1,5 +1,6 @@
 from distutils.core import setup
 from setuptools import find_packages
+from req import reqs
 
 setup(
     name="algoneer",
@@ -12,7 +13,7 @@ setup(
     packages=find_packages(),
     package_data={"": ["*.ini"], "algoneer" : ['py.typed']},
     include_package_data=True,
-    install_requires=["click", "pyyaml"],
+    install_requires=reqs,
     zip_safe=False,
     entry_points={"console_scripts": ["algoneer = algoneer.cli.main:algoneer"]},
     description="A Python toolkit for testing algorithmic systems and machine learning models.",
