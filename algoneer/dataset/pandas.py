@@ -1,4 +1,4 @@
-from typing import Optional, Mapping, Iterable, Dict, Any, List
+from typing import Optional, Mapping, Iterable, Dict, Any, List, Tuple, Union
 
 import functools
 import pandas as pd
@@ -136,6 +136,24 @@ class PandasDataSet(DataSet):
             )
         self.__dict__["_attributes"] = attributes
 
+    def _wrap(self, v: Any) -> Union[PandasAttribute, "PandasDataSet", Any]:
+        if isinstance(v, pd.DataFrame):
+            return self._wrap_ds(v)
+        elif isinstance(v, pd.Series):
+            return self._wrap_attribute(v)
+        return v
+
+    def _wrap_ds(self, v: pd.DataFrame) -> "PandasDataSet":
+        ds = PandasDataSet(v)
+        ds.schema = self.schema
+        return ds
+
+    def _wrap_attribute(self, v: pd.Series) -> PandasAttribute:
+        schema = None
+        if self.schema is not None:
+            schema = self.schema.attributes.get(v.name)
+        return PandasAttribute(self, v, schema)
+
     @property
     def df(self) -> pd.DataFrame:
         return self._df
@@ -143,16 +161,7 @@ class PandasDataSet(DataSet):
     @proxy
     def __getitem__(self, item):
         v = self._df.__getitem__(item)
-        if isinstance(v, pd.DataFrame):
-            ds = PandasDataSet(v)
-            ds.schema = self.schema
-            return ds
-        elif isinstance(v, pd.Series):
-            schema = None
-            if self.schema is not None:
-                schema = self.schema.attributes.get(v.name)
-            return PandasAttribute(self, v, schema)
-        return v
+        return self._wrap(v)
 
     @proxy
     def __setitem__(self, item, value):
@@ -195,6 +204,13 @@ class PandasDataSet(DataSet):
         self._schema = schema
         # we regenerate the attributes
         self._generate_attributes()
+
+    @property
+    def shape(self) -> Tuple:
+        return self._df.shape
+
+    def select(self, indexes: Iterable[int]) -> "PandasDataSet":
+        return self._wrap_ds(self._df.loc[indexes, :])
 
     def copy(self) -> "PandasDataSet":
 

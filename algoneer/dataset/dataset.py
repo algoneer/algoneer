@@ -3,7 +3,7 @@ from .roles import Roles
 from .attribute import Attribute
 import abc
 
-from typing import Iterable, Mapping
+from typing import Iterable, Mapping, Tuple
 
 
 class DataSet(abc.ABC):
@@ -47,4 +47,17 @@ class DataSet(abc.ABC):
 
     @abc.abstractmethod
     def __len__(self) -> int:
+        pass
+
+    @abc.abstractmethod
+    def copy(self) -> "DataSet":
+        pass
+
+    @property  # type: ignore
+    @abc.abstractmethod
+    def shape(self) -> Tuple:
+        pass
+
+    @abc.abstractmethod
+    def select(self, indexes: Iterable[int]) -> "DataSet":
         pass
