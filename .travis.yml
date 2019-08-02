@@ -2,14 +2,3 @@ language: python
 python:
   - "3.5"
   - "3.6"
-script:
-  - echo "doing nothing"
-deploy:
-  provider: pypi
-  user: andreas.dewes
-  password:
-    secure: fMghjB4zgBG8AUNeE7UvneNAxr74YmAA6QlLBKQjNtEo0HT0XLlTdkdcuuqVC9pM3oBtP/RDS8TP/roJsr0vjOELt/CYO3Tz6cxw75l/HlfPsE0IuSWWx1Vm0UaxPE7JVaKl32B9SA19p+j6X7Rzzk1WG9Qm7OpLq4nCRWrDNSnKuGH8CFRIZjTeHvwsqBXnfdGQJswp/y6y1RgTHZziHAyRJl3qsX5LcW5bSGT8QFOIhBebOenz19D0sZ1cPFjcV78vNvwGo+nVUfF1a6to1NoUxiGF+79sSIXDY3ldXGsx8bUMSQqEfICG8jemeSAmvJBP3uY1/sc69rXd6ysVDusqUZy2pA6jCAi9HD0XRwhwcN/gIrX85ONv8Hk7TtinY8FeVe2XyJkKHUhjXEq2kdJqozejXiGHqycaxBU9JQ2piq3OvV4HLpgwIbXpCY5yHJ++HuD4caWelXm3fAY0lf1xppMbMzkEp6dhJnZEoq1kNjyE27okcwn/aZyHqcemz0xfUzwHV8Io821pwzkf/8AgWkKAFIa8iSlFv4/S8d1KlJU/nDdiD6h6OWh91XK6YKsdWFR06OKctjh6YhRgETRR5qzTEX6MYkfYtZsF1EZUByfyROCS3WrLL/C42FQ7/yMZXRIXWIxWZBadSLaUqpXfFnN4Oqv78w82MAN2CsI=
-  on:
-    tags: true
-    python: 3.6
-  distributions: "sdist bdist_wheel"
