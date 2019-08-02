@@ -2,6 +2,7 @@ image: python:3.6.7
 
 stages:
   - test
+  - deploy
 
 test:
   stage: test
@@ -11,3 +12,12 @@ test:
     - pip3 install -r requirements-test.txt
   script:
     - make
+
+deploy:
+  stage: deploy
+  only:
+    - /^v\d+\.\d+\.\d+$/
+  before_script:
+    - pip3 install twine
+  script:
+    - make release

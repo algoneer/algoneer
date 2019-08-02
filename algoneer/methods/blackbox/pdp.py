@@ -46,7 +46,9 @@ class PDP(ModelTest):
             else:
                 self.log(
                     logging.WARNING,
-                    "unknown attribute type for column: {}".format(attribute.column),
+                    "unknown attribute type for column '{}', skipping...".format(
+                        attribute.column
+                    ),
                 )
                 return
 
@@ -65,7 +67,7 @@ class PDP(ModelTest):
                     # to do: handle multi-class classifiers
                     # if this is a classifier we calculate the probability
                     ys.append(float(y.sum() / len(y)))
-                elif model.algorithm.is_regression:
+                elif model.algorithm.is_regressor:
                     # if this is a regression, we calculate the mean value
                     ys.append(float(y.mean()))
                 nds[column] = old_column
