@@ -31,7 +31,10 @@ class PDP(ModelTest):
         max_values: int = None,
         max_datapoints: int = None,
         correlated: bool = False,
-    ) -> Union[Dict[str, Dict[str, Tuple[float]]], Dict[str, Tuple[float]]]:
+    ) -> Union[
+        Dict[str, Dict[str, List[Tuple[float, float, float]]]],
+        Dict[str, List[Tuple[float, float]]],
+    ]:
         """
         Run the test.
 
@@ -69,9 +72,9 @@ class PDP(ModelTest):
 
             cvs[column] = vs
 
-        def pdp(ds, model, column):
+        def pdp(ds: DataSet, model: Model, column: str) -> List[Tuple[float, float]]:
 
-            ys: List[Tuple[float]] = []
+            ys: List[Tuple[float, float]] = []
 
             for v in cvs[column]:
                 # we replace all values of the attribute by v
@@ -94,12 +97,14 @@ class PDP(ModelTest):
 
             return ys
 
-        def pdp_correlated(ds, model, column_a, column_b):
+        def pdp_correlated(
+            ds: DataSet, model: Model, column_a: str, column_b: str
+        ) -> List[Tuple[float, float, float]]:
             """
             Generate the partial dependence for a categorical attribute
             """
 
-            ys: List[Tuple[float]] = []
+            ys: List[Tuple[float, float, float]] = []
 
             for va in cvs[column_a]:
                 for vb in cvs[column_b]:
@@ -122,7 +127,7 @@ class PDP(ModelTest):
                     nds[column_a] = old_column_a
                     nds[column_b] = old_column_b
 
-                    ys.append((va, vb, py))
+                    ys.append((float(va), float(vb), py))
 
             return ys
 
@@ -138,7 +143,9 @@ class PDP(ModelTest):
         if correlated:
 
             # we store PDPs in a simple dict
-            correlated_pdps: Dict[str, Dict[str, Tuple[float]]] = defaultdict(dict)
+            correlated_pdps: Dict[
+                str, Dict[str, List[Tuple[float, float, float]]]
+            ] = defaultdict(dict)
 
             # we generate a partial dependence plot for every column
             for column_a in dataset.roles.x.columns:
@@ -155,10 +162,9 @@ class PDP(ModelTest):
             return correlated_pdps
         else:
 
-            pdps: Dict[str, Tuple[float]] = {}
+            pdps: Dict[str, List[Tuple[float, float]]] = {}
             for column in dataset.roles.x.columns:
                 if columns is not None and not column in columns:
                     continue
                 pdps[column] = pdp(nds, model, column)
-            print(pdps)
             return pdps

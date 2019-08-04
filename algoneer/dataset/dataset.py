@@ -61,3 +61,11 @@ class DataSet(abc.ABC):
     @abc.abstractmethod
     def select(self, indexes: Iterable[int]) -> "DataSet":
         pass
+
+    @abc.abstractmethod
+    def sum(self) -> float:
+        pass
+
+    @abc.abstractmethod
+    def mean(self) -> float:
+        pass

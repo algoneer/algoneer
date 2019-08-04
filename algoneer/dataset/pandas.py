@@ -82,6 +82,12 @@ class PandasAttribute(Attribute):
     def series(self) -> pd.Series:
         return self._series
 
+    def sum(self) -> float:
+        return self._series.sum()
+
+    def mean(self) -> float:
+        return self._series.mean()
+
     @proxy
     def __setitem__(self, item, value):
         return self._series.__setitem__(item, value)
@@ -208,6 +214,12 @@ class PandasDataSet(DataSet):
     @property
     def shape(self) -> Tuple:
         return self._df.shape
+
+    def sum(self) -> float:
+        return self._df.sum()
+
+    def mean(self) -> float:
+        return self._df.mean()
 
     def select(self, indexes: Iterable[int]) -> "PandasDataSet":
         return self._wrap_ds(self._df.loc[indexes, :])

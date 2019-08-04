@@ -23,7 +23,7 @@ class Attribute(abc.ABC):
             if self.schema is not None and self.schema.type.name.lower() == _type:
                 return True
             return False
-        return super().__getattr__(attr)
+        return getattr(super(), attr)
 
     @property  # type: ignore
     @abc.abstractmethod
@@ -52,4 +52,12 @@ class Attribute(abc.ABC):
 
     @abc.abstractmethod
     def __len__(self) -> int:
+        pass
+
+    @abc.abstractmethod
+    def sum(self) -> float:
+        pass
+
+    @abc.abstractmethod
+    def mean(self) -> float:
         pass
