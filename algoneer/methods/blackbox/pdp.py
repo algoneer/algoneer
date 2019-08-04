@@ -6,7 +6,7 @@ This modules implements the generation of partial dependence plots for machine
 learning models.
 """
 
-from typing import Sequence, Optional, Dict, Any, List, Iterable
+from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
 from algoneer import DataSet, Model, ModelTest
 
 from collections import defaultdict
@@ -30,7 +30,8 @@ class PDP(ModelTest):
         columns: Optional[Sequence[str]] = None,
         max_values: int = None,
         max_datapoints: int = None,
-    ):
+        correlated: bool = False,
+    ) -> Union[Dict[str, Dict[str, Tuple[float]]], Dict[str, Tuple[float]]]:
         """
         Run the test.
 
@@ -60,7 +61,7 @@ class PDP(ModelTest):
                 continue
 
             if max_values is not None and len(vs) > max_values:
-                vss = [0]
+                vss = [vs[0]]
                 # we pick quantile values for the test
                 for i in range(1, max_values + 1):
                     vss.append(vs[i * len(vs) // max_values - 1])
@@ -68,12 +69,37 @@ class PDP(ModelTest):
 
             cvs[column] = vs
 
-        def pdp(ds, model, column_a, column_b):
+        def pdp(ds, model, column):
+
+            ys: List[Tuple[float]] = []
+
+            for v in cvs[column]:
+                # we replace all values of the attribute by v
+                old_column = nds[column].copy()
+                nds[column] = v
+                # we compute the prediction of the model for the modified data
+                y = model.predict(nds)
+                if model.algorithm.is_classifier:
+                    # to do: handle multi-class classifiers
+                    # if this is a classifier we calculate the probability
+                    py = float(y.sum() / len(y))
+                elif model.algorithm.is_regressor:
+                    # if this is a regression, we calculate the mean value
+                    py = float(y.mean())
+
+                # we revert the columns to their old values
+                nds[column] = old_column
+
+                ys.append((v, py))
+
+            return ys
+
+        def pdp_correlated(ds, model, column_a, column_b):
             """
             Generate the partial dependence for a categorical attribute
             """
 
-            ys = []
+            ys: List[Tuple[float]] = []
 
             for va in cvs[column_a]:
                 for vb in cvs[column_b]:
@@ -100,9 +126,6 @@ class PDP(ModelTest):
 
             return ys
 
-        # we store PDPs in a simple dict
-        pdps: Dict[str, Dict[str, Any]] = defaultdict(dict)
-
         # we make a copy of the dataset (this might be expensive)
         nds = dataset.copy()
 
@@ -112,16 +135,30 @@ class PDP(ModelTest):
                 indexes.append((i * len(nds)) // max_datapoints - 1)
             nds = nds.select(indexes)
 
-        # we generate a partial dependence plot for every column
-        for column_a in dataset.roles.x.columns:
-            if columns is not None and not column_a in columns:
-                continue
-            for column_b in dataset.roles.x.columns:
-                if columns is not None and not column_b in columns:
-                    continue
-                if not column_a in cvs or not column_b in cvs:
-                    continue
-                pdps[column_a][column_b] = pdp(nds, model, column_a, column_b)
+        if correlated:
 
-        # we return the PDPs
-        return pdps
+            # we store PDPs in a simple dict
+            correlated_pdps: Dict[str, Dict[str, Tuple[float]]] = defaultdict(dict)
+
+            # we generate a partial dependence plot for every column
+            for column_a in dataset.roles.x.columns:
+                if columns is not None and not column_a in columns:
+                    continue
+                for column_b in dataset.roles.x.columns:
+                    if columns is not None and not column_b in columns:
+                        continue
+                    if not column_a in cvs or not column_b in cvs:
+                        continue
+                    correlated_pdps[column_a][column_b] = pdp_correlated(
+                        nds, model, column_a, column_b
+                    )
+            return correlated_pdps
+        else:
+
+            pdps: Dict[str, Tuple[float]] = {}
+            for column in dataset.roles.x.columns:
+                if columns is not None and not column in columns:
+                    continue
+                pdps[column] = pdp(nds, model, column)
+            print(pdps)
+            return pdps
