@@ -1,4 +1,4 @@
-from .dataset import DataSet
+from .dataset import DataSet, Attribute
 from .dataschema import DataSchema
 from .datapoint import DataPoint
 

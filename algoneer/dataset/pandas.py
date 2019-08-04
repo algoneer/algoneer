@@ -1,4 +1,4 @@
-from typing import Optional, Mapping, Iterable, Dict, Any, List, Tuple, Union
+from typing import Optional, Mapping, Iterable, Dict, Any, List, Tuple, Union, Callable
 
 import functools
 import pandas as pd
@@ -11,14 +11,37 @@ from .attribute import Attribute
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
-def proxy(f, bound=True):
+def proxy(
+    f: Callable[..., Any], bound: bool = True, ds: "Optional[PandasDataSet]" = None
+) -> Callable[..., Any]:
     @functools.wraps(f)
-    def convert(*args, **kwargs):
-        nargs = []
-        nkwargs = {}
+    def convert(*args, **kwargs) -> Any:
+        nargs: List[Any] = []
+        nkwargs: Dict[str, Any] = {}
+
+        dss: Optional[PandasDataSet] = ds
 
         if bound:
-            self, args = args[0], args[1:]
+            obj, args = args[0], args[1:]
+            if dss is None:
+                if isinstance(obj, PandasDataSet):
+                    dss = obj
+                elif isinstance(obj, PandasAttribute):
+                    dss = obj.dataset
+
+        def wrap(
+            v: Any, ds: PandasDataSet
+        ) -> Union[PandasAttribute, PandasDataSet, Any]:
+            if isinstance(v, pd.DataFrame):
+                nds = PandasDataSet(v)
+                nds.schema = ds.schema
+                return nds
+            elif isinstance(v, pd.Series):
+                schema = None
+                if ds.schema is not None:
+                    schema = ds.schema.attributes.get(v.name)
+                return PandasAttribute(ds, v, schema)
+            return v
 
         def conv(arg: Any) -> Any:
             if isinstance(arg, PandasAttribute):
@@ -34,9 +57,14 @@ def proxy(f, bound=True):
             nkwargs[k] = conv(v)
 
         if bound:
-            return f(self, *nargs, **nkwargs)
+            res = f(obj, *nargs, **nkwargs)
         else:
-            return f(*nargs, **nkwargs)
+            res = f(*nargs, **nkwargs)
+
+        if isinstance(dss, PandasDataSet):
+            return wrap(res, dss)
+
+        return res
 
     return convert
 
@@ -65,6 +93,10 @@ class PandasAttribute(Attribute):
         self._schema = schema
 
     @property
+    def dataset(self) -> "PandasDataSet":
+        return self._dataset
+
+    @property
     def roles(self) -> Iterable[str]:
         if self._schema is None:
             return []
@@ -89,6 +121,10 @@ class PandasAttribute(Attribute):
         return self._series.mean()
 
     @proxy
+    def __getitem__(self, item):
+        return self._series.__getitem__(item)
+
+    @proxy
     def __setitem__(self, item, value):
         return self._series.__setitem__(item, value)
 
@@ -109,10 +145,11 @@ class PandasAttribute(Attribute):
         v = getattr(self._series, attr)
         # if this is a callable function we wrap it in a proxy decorator
         if callable(v):
-            return proxy(v, bound=False)
+            return proxy(v, bound=False, ds=self)
         return v
 
     def astype(self, type: str, config: Dict[str, Any]):
+        # to do: implement this
         return self
 
 
@@ -142,32 +179,14 @@ class PandasDataSet(DataSet):
             )
         self.__dict__["_attributes"] = attributes
 
-    def _wrap(self, v: Any) -> Union[PandasAttribute, "PandasDataSet", Any]:
-        if isinstance(v, pd.DataFrame):
-            return self._wrap_ds(v)
-        elif isinstance(v, pd.Series):
-            return self._wrap_attribute(v)
-        return v
-
-    def _wrap_ds(self, v: pd.DataFrame) -> "PandasDataSet":
-        ds = PandasDataSet(v)
-        ds.schema = self.schema
-        return ds
-
-    def _wrap_attribute(self, v: pd.Series) -> PandasAttribute:
-        schema = None
-        if self.schema is not None:
-            schema = self.schema.attributes.get(v.name)
-        return PandasAttribute(self, v, schema)
-
     @property
     def df(self) -> pd.DataFrame:
         return self._df
 
     @proxy
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Union["PandasDataSet", PandasAttribute]:
         v = self._df.__getitem__(item)
-        return self._wrap(v)
+        return v
 
     @proxy
     def __setitem__(self, item, value):
@@ -190,7 +209,7 @@ class PandasDataSet(DataSet):
         v = getattr(self._df, attr)
         # if this is a callable function we wrap it in a proxy decorator
         if callable(v):
-            return proxy(v, bound=False)
+            return proxy(v, bound=False, ds=self)
         return v
 
     @property
@@ -221,8 +240,9 @@ class PandasDataSet(DataSet):
     def mean(self) -> float:
         return self._df.mean()
 
+    @proxy
     def select(self, indexes: Iterable[int]) -> "PandasDataSet":
-        return self._wrap_ds(self._df.loc[indexes, :])
+        return self._df.loc[indexes, :]
 
     def copy(self) -> "PandasDataSet":
 
@@ -234,6 +254,7 @@ class PandasDataSet(DataSet):
         return ds
 
     def astype(self, type: str, **kwargs: Dict[str, Any]):
+        # to do: implement this
         pass
 
     # Static helper methods (to create PandasDataSet objects)
@@ -275,3 +296,7 @@ class PandasDataSet(DataSet):
         ds.schema = schema
 
         return ds
+
+    @proxy
+    def order_by(self, columns: Iterable[str]) -> "PandasDataSet":
+        return self.df.sort_values(columns)

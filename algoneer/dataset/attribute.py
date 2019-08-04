@@ -1,6 +1,6 @@
 import algoneer.dataset
 
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Any
 
 from ..dataschema import AttributeSchema
 
@@ -23,7 +23,7 @@ class Attribute(abc.ABC):
             if self.schema is not None and self.schema.type.name.lower() == _type:
                 return True
             return False
-        return getattr(super(), attr)
+        raise AttributeError("not found")
 
     @property  # type: ignore
     @abc.abstractmethod
@@ -50,6 +50,11 @@ class Attribute(abc.ABC):
     def schema(self, schema: Optional[AttributeSchema]) -> None:
         pass
 
+    @property  # type: ignore
+    @abc.abstractmethod
+    def dataset(self):
+        pass
+
     @abc.abstractmethod
     def __len__(self) -> int:
         pass
@@ -60,4 +65,8 @@ class Attribute(abc.ABC):
 
     @abc.abstractmethod
     def mean(self) -> float:
+        pass
+
+    @abc.abstractmethod
+    def __getitem__(self, item) -> Any:
         pass

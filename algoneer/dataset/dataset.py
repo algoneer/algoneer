@@ -3,7 +3,7 @@ from .roles import Roles
 from .attribute import Attribute
 import abc
 
-from typing import Iterable, Mapping, Tuple
+from typing import Iterable, Mapping, Tuple, Union
 
 
 class DataSet(abc.ABC):
@@ -34,7 +34,7 @@ class DataSet(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Union["DataSet", Attribute]:
         pass
 
     @abc.abstractmethod
@@ -68,4 +68,8 @@ class DataSet(abc.ABC):
 
     @abc.abstractmethod
     def mean(self) -> float:
+        pass
+
+    @abc.abstractmethod
+    def order_by(self, columns: Iterable[str]) -> "DataSet":
         pass

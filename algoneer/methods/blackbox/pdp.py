@@ -7,7 +7,7 @@ learning models.
 """
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
-from algoneer import DataSet, Model, ModelTest
+from algoneer import DataSet, Model, ModelTest, Attribute
 
 from collections import defaultdict
 
@@ -49,6 +49,7 @@ class PDP(ModelTest):
             if columns is not None and not column in columns:
                 continue
             attribute = dataset[column]
+            assert isinstance(attribute, Attribute)
             if attribute.is_categorical or attribute.is_ordinal:
                 # we get all unique values for the attribute
                 vs = sorted(attribute.unique())
