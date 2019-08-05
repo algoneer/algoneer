@@ -21,3 +21,30 @@ deploy:
     - pip3 install twine
   script:
     - make release
+
+docs:
+  stage: deploy
+  only:
+    - /^v\d+\.\d+\.\d+$/
+  before_script:
+    - apt-get update -qy
+    - apt-get install -y locales rsync openssh-client
+    - echo "en_US UTF-8" > /etc/locale.gen
+    - locale-gen en_US.UTF-8
+    - export LANG=en_US.UTF-8
+    - export LANGUAGE=en_US:en
+    - export LC_ALL=en_US.UTF-8
+  script:
+    - if [ ! -n "$DOCS_SERVER_SSH_KEY" ]; then exit 0; fi
+    - mkdir ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$DOCS_SERVER_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - cd docs
+    - pip3 install -r requirements.txt
+    - make html
+    - echo "Deploying $CI_COMMIT_REF_NAME..."
+    - if [ "$CI_COMMIT_REF_NAME" = "master" ]; then export DIRECTORY=master; fi;
+    - if [ "$CI_COMMIT_REF_NAME" = "staging" ]; then export DIRECTORY=staging; fi;
+    # we deploy the documentation
+    - if [ -n "$CI_COMMIT_REF_NAME" ]; then rsync --delete --progress -r -e "ssh -o StrictHostKeyChecking=no -o identityFile=~/.ssh/id_rsa" build/html/ $DOCS_SSH_USER@$DOCS_SSH_HOST:/algoneer-docs/$DIRECTORY; fi;
