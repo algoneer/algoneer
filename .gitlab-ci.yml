@@ -44,7 +44,7 @@ docs:
     - pip3 install -r requirements.txt
     - make html
     - echo "Deploying $CI_COMMIT_REF_NAME..."
-    - if [ "$CI_COMMIT_REF_NAME" = "master" ]; then export DIRECTORY=master; fi;
+    - export DIRECTORY=master
     - if [ "$CI_COMMIT_REF_NAME" = "staging" ]; then export DIRECTORY=staging; fi;
     # we deploy the documentation
     - if [ -n "$CI_COMMIT_REF_NAME" ]; then rsync --delete --progress -r -e "ssh -o StrictHostKeyChecking=no -o identityFile=~/.ssh/id_rsa" build/html/ $DOCS_SSH_USER@$DOCS_SSH_HOST:/algoneer-docs/$DIRECTORY; fi;
