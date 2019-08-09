@@ -14,13 +14,9 @@ understanding algorithmic systems.
 
    getting_started
 
-   tutorials/index
-
    algoneer/basics
 
    algoneer/methods/index
-
-   algonaut/index
 
 .. attention::
 

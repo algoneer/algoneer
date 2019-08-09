@@ -1,110 +1,97 @@
 Getting Started
 ===============
 
+.. attention::
+
+   This is a work-in-progress that shows how the pre-alpha version of Algoneer
+   works. Please let us know if you should encounter any problems.
+
 Algoneer helps you to better understand your datasets and machine learning
-models and test them for potential problems. Using Algoneer is very simple.
-
-Testing DataSets
-----------------
-
-
-Testing Models
---------------
+models and test them for potential problems. Algoneer aims to be simple to use.
 
 Algoneer provides blackbox tests that work on :class:`~algoneer.model.Model`
 objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
 
-As an example, we're going to load an example dataset:
+To get started we need to install Algoneer, which we can do using pip:
+
+.. code-block:: bash
+
+    pip install algoneer
+
+Algoneer aims to be technology-agnostic and provides wrappers for the most
+popular data processing and machine learning libraries. In this tutorial, we
+are going to use Algoneer in conjunction with `pandas` and `scikit-learn`,
+which we need to install manually.
+
+.. code-block:: bash
+
+    pip install pandas scikit-learn
+
+Algoneer also provides a separate package with several example datasets that
+make it easy to get started. We can also install them using pip:
+
+.. code-block:: bash
+
+    pip install algoneer_datasets
+
+That's it, we're good to go! Let's start using Algoneer by loading an example
+dataset and running a test on it. You can find a Jupyter notebook with the
+example code `online <https://github.com/algoneer/algoneer/blob/master/examples/bike-sharing/partial-dependence-plot.ipynb>`_
+or in the `examples/bike-sharing/partial-dependence-plot.ipynb` file of the
+repository (for the visualization you will need `matplotlib` installed).
 
 .. code-block:: python
 
-    from sklearn.datasets import load_wine
-   
-    data = load_wine()
+    from algoneer_datasets.bike_sharing import load_dataset
+    ds = load_dataset()
 
-    import pandas as pd
-    import numpy as np
+This creates a :class:`~algoneer.dataset.pandas.PandasDataSet` that contains
+the bike sharing data. This dataset is just a thin wrapper around a pandas
+dataframe and adds functionality that is helpful when using the dataset for
+testing. Notably, it includes a :class:`~algoneer.dataschema.DataSchema` that
+contains information about all attributes in the dataset.
 
-    Y = pd.DataFrame(data['target'],)[0]
-    features= [[i, "f{}".format(i+1)] for i in range(13)]
-    X = pd.DataFrame(data['data'][:,[f[0] for f in features]], columns=[f[1] for f in features])
-
-Then, we're going to define a test and training dataset:
-
-.. code-block:: python
-
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.5, random_state=42)
-
-Let's train a classifier with this data:
+Now, to test a machine learning model with Algoneer we first need to train one.
+To do this, we can again import a model from the example datasets library:
 
 .. code-block:: python
 
-    from sklearn.naive_bayes import GaussianNB
-    clf = GaussianNB()
-    clf.fit(X_train, Y_train)
+    from algoneer_datasets.bike_sharing.algorithms import get_algorithm
+    algo = get_algorithm('random-forest', n_estimators=100)
+    model = algo.fit(ds)
 
-    # we produce predictions for the training set
-    Yp_train = clf.predict(X_train)
+Again, the :class:`~algoneer.algorithm.Algorithm` class is just a thin wrapper
+around existing algorithms, in this case a scikit-learn random forest regressor.
 
-That's it! Let's see what our accuracy is:
-
-.. code-block:: python
-
-    from sklearn.metrics import accuracy_score
-    print("Training data accuracy: {:.2f}".format(accuracy_score(Yp_train, Y_train)*100))
-    # Training data accuracy: 98.88
-
-Pretty good! But let's investigate this result with Algoneer. To do so, we
-first create a :class:`~algoneer.model.Model` instance:
+Now that we have trained our model, we can run a simple black box test on it:
 
 .. code-block:: python
 
-   
-    from algoneer import Model, DataSet
+    from algoneer.methods.blackbox.pdp import PDP
 
-    # we create a dataset for the training data
-    ds = DataSet(X=X_train, Y=Y_train)
+    pdp = PDP()
 
-    # we create a model from our classifier and the training dataset
-    model = Model(clf, dataset=ds)
+This so-called partial dependence plot is a simple test that quantifies the
+average effect that a given attribute has on the prediction of a machine
+learning model. You can read more about the test
+`here <https://christophm.github.io/interpretable-ml-book/pdp.html>`_.
 
-That's all we need to start testing, as Algoneer will automatically detect
-what kind of model we created and what it can do with it. To run all available
-tests on the model, we simply run
+Let's run it on our model:
 
 .. code-block:: python
 
-    results = model.test()
+    result = pdp.run(model, ds, max_values=20, max_datapoints=100)
 
-The `result` variable will contain a :class:`~algoneer.result_set.ResultSet`
-instance which will in turn contain results for all tests that Algoneer
-executed on the model and the dataset.
+Here, `max_values` specifies the maximum number of distinct values of each
+attribute that we will calculate the dependence for, `max_datapoints` specifies
+the number of datapoints that we use to average the effect of the attribute.
+The PDP test will calculate the dependence values for all attributes in the
+dataset that have a `x` role. You can restrict the attributes for which you
+want to calculate the dependence by specifying a list of attribute columns
+that you're interested in using the `columns` parameter.
 
-To investigate results directly in Python, we can do the following:
-
-.. code-block:: python
-
-    robustness = results['robustness']
-    robustness.report(format='stdout')
-
-This will print the test result as a text to the standard output. To document
-your test results more permanently we can upload them to the
-:doc:`Algonaut <algonaut/index>` service. For this, we first need to generate an
-:doc:`access token <algonaut/access_tokens>`. After doing that, we can
-simply initialize a :class:`~algoneer.session.Session` object and use it to
-upload the results:
-
-.. code-block:: python
-
-    from algoneer import Session
-
-    session = Session('our-api-token-value')
-
-    session.add(results)
-    session.sync()
-
-Voila! Our results will now be available on Algonaut, where we can interact
-them using a rich user interface and where we can share them with our team
-mates.
+Currently, the result that we obtain is a simple data structure that contains
+a list of tuples for each attribute, which contains the average predicted
+value for the different attribute values. We're working on a better presentation
+of these results, please bear with us.
