@@ -50,6 +50,14 @@ class DataSet(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def __sub__(self, other: "DataSet") -> "DataSet":
+        pass
+
+    @abc.abstractmethod
+    def __add__(self, other: "DataSet") -> "DataSet":
+        pass
+
+    @abc.abstractmethod
     def copy(self) -> "DataSet":
         pass
 
@@ -59,7 +67,7 @@ class DataSet(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def select(self, indexes: Iterable[int]) -> "DataSet":
+    def select(self, indexes: Union[Iterable[int], slice]) -> "DataSet":
         pass
 
     @abc.abstractmethod

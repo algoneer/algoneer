@@ -68,5 +68,13 @@ class Attribute(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def min(self) -> float:
+        pass
+
+    @abc.abstractmethod
+    def max(self) -> float:
+        pass
+
+    @abc.abstractmethod
     def __getitem__(self, item) -> Any:
         pass

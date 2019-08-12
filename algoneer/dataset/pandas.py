@@ -120,6 +120,12 @@ class PandasAttribute(Attribute):
     def mean(self) -> float:
         return self._series.mean()
 
+    def min(self) -> float:
+        return self._series.min()
+
+    def max(self) -> float:
+        return self._series.max()
+
     @proxy
     def __getitem__(self, item):
         return self._series.__getitem__(item)
@@ -241,8 +247,8 @@ class PandasDataSet(DataSet):
         return self._df.mean()
 
     @proxy
-    def select(self, indexes: Iterable[int]) -> "PandasDataSet":
-        return self._df.loc[indexes, :]
+    def select(self, indexes: Union[Iterable[int], slice]) -> "PandasDataSet":
+        return self._df.iloc[indexes, :].copy()
 
     def copy(self) -> "PandasDataSet":
 
@@ -297,6 +303,18 @@ class PandasDataSet(DataSet):
 
         return ds
 
+    def __sub__(self, other: "DataSet") -> "PandasDataSet":
+        assert isinstance(other, PandasDataSet)
+        ds = PandasDataSet(self.df - other.df)
+        ds.schema = self.schema
+        return ds
+
+    def __add__(self, other: "DataSet") -> "PandasDataSet":
+        assert isinstance(other, PandasDataSet)
+        ds = PandasDataSet(self.df + other.df)
+        ds.schema = self.schema
+        return ds
+
     @proxy
     def order_by(self, columns: Iterable[str]) -> "PandasDataSet":
-        return self.df.sort_values(columns)
+        return self.df.sort_values(columns).reset_index(drop=True)

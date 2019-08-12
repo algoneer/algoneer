@@ -67,7 +67,7 @@ class PDP(ModelTest):
             if max_values is not None and len(vs) > max_values:
                 vss = [vs[0]]
                 # we pick quantile values for the test
-                for i in range(1, max_values + 1):
+                for i in range(1, max_values):
                     vss.append(vs[i * len(vs) // max_values - 1])
                 vs = vss
 
@@ -149,10 +149,10 @@ class PDP(ModelTest):
             ] = defaultdict(dict)
 
             # we generate a partial dependence plot for every column
-            for column_a in dataset.roles.x.columns:
+            for column_a in cvs:
                 if columns is not None and not column_a in columns:
                     continue
-                for column_b in dataset.roles.x.columns:
+                for column_b in cvs:
                     if columns is not None and not column_b in columns:
                         continue
                     if not column_a in cvs or not column_b in cvs:
@@ -164,7 +164,7 @@ class PDP(ModelTest):
         else:
 
             pdps: Dict[str, List[Tuple[float, float]]] = {}
-            for column in dataset.roles.x.columns:
+            for column in cvs:
                 if columns is not None and not column in columns:
                     continue
                 pdps[column] = pdp(nds, model, column)
