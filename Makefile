@@ -10,7 +10,7 @@ mypy:
 	mypy algoneer/
 
 test:
-	py.test tests ${TESTARGS}
+	py.test algoneer_tests ${TESTARGS}
 
 update:
 	pip3 install pur
