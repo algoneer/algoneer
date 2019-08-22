@@ -1,14 +1,15 @@
 from algoneer.dataschema import DataSchema
 from .roles import Roles
 from .attribute import Attribute
+
 import abc
 
 from typing import Iterable, Mapping, Tuple, Union
 
 
-class Dataset(abc.ABC):
+class Datapoint(abc.ABC):
 
-    """Describes a collection of :class:`~algoneer.datapoint.DataPoint` objects.
+    """Describes a single datapoint.
     """
 
     @property
@@ -34,7 +35,7 @@ class Dataset(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def __getitem__(self, item) -> Union["Dataset", Attribute]:
+    def __getitem__(self, item) -> Union["Datapoint", Attribute]:
         pass
 
     @abc.abstractmethod
@@ -50,15 +51,15 @@ class Dataset(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def __sub__(self, other: "Dataset") -> "Dataset":
+    def __sub__(self, other: "Datapoint") -> "Datapoint":
         pass
 
     @abc.abstractmethod
-    def __add__(self, other: "Dataset") -> "Dataset":
+    def __add__(self, other: "Datapoint") -> "Datapoint":
         pass
 
     @abc.abstractmethod
-    def copy(self) -> "Dataset":
+    def copy(self) -> "Datapoint":
         pass
 
     @property  # type: ignore
@@ -67,7 +68,7 @@ class Dataset(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def select(self, indexes: Union[Iterable[int], slice]) -> "Dataset":
+    def select(self, indexes: Union[Iterable[int], slice]) -> "Datapoint":
         pass
 
     @abc.abstractmethod
@@ -79,5 +80,5 @@ class Dataset(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def order_by(self, columns: Iterable[str]) -> "Dataset":
+    def order_by(self, columns: Iterable[str]) -> "Datapoint":
         pass

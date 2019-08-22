@@ -3,8 +3,8 @@ from .model import Model
 import pandas as pd
 import sklearn
 
-from algoneer.dataset.pandas import PandasDataSet
-from algoneer.dataset import DataSet, Attribute
+from algoneer.dataset.pandas import PandasDataset
+from algoneer.dataset import Dataset, Attribute
 from algoneer.algorithm import Algorithm
 
 from typing import Union
@@ -15,9 +15,9 @@ class SklearnModel(Model):
         super().__init__(algorithm=algorithm)
         self._estimator = estimator
 
-    def predict(self, dataset: DataSet) -> Union[DataSet, Attribute]:
+    def predict(self, dataset: Dataset) -> Union[Dataset, Attribute]:
 
-        pd_dataset = PandasDataSet.from_dataset(dataset)
+        pd_dataset = PandasDataset.from_dataset(dataset)
 
         # we get the attributes that have the "x" role assigned to them
         x = pd_dataset.roles.x
@@ -25,4 +25,4 @@ class SklearnModel(Model):
         # we predict the value using an sklearn estimator
         y = pd.DataFrame(self._estimator.predict(x.df))
 
-        return PandasDataSet(y)
+        return PandasDataset(y)

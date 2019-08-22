@@ -47,7 +47,7 @@ class AttributeSchema:
     def column(self):
         return self._column
 
-    def enforce(self, ds: "algoneer.dataset.DataSet"):
+    def enforce(self, ds: "algoneer.dataset.Dataset"):
         attribute = ds[self.column]
         assert isinstance(attribute, algoneer.dataset.Attribute)
         # we can test our luck...

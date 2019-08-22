@@ -11,7 +11,7 @@ class Attribute(abc.ABC):
     @abc.abstractmethod
     def __init__(
         self,
-        dataset: "algoneer.dataset.DataSet",
+        dataset: "algoneer.dataset.Dataset",
         column: str,
         schema: Optional[AttributeSchema],
     ) -> None:

@@ -9,7 +9,7 @@ class DataSchema:
         self._schema = parse_schema(self, schema)
         self._attributes = parse_attributes(self, schema)
 
-    def enforce(self, ds: "algoneer.dataset.DataSet"):
+    def enforce(self, ds: "algoneer.dataset.Dataset"):
         for key, attribute in self._attributes.items():
             attribute.enforce(ds)
 

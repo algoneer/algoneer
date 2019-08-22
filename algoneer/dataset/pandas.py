@@ -5,35 +5,35 @@ import pandas as pd
 import os
 import yaml
 
-from .dataset import DataSet
+from .dataset import Dataset
 from .roles import Roles
 from .attribute import Attribute
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
 def proxy(
-    f: Callable[..., Any], bound: bool = True, ds: "Optional[PandasDataSet]" = None
+    f: Callable[..., Any], bound: bool = True, ds: "Optional[PandasDataset]" = None
 ) -> Callable[..., Any]:
     @functools.wraps(f)
     def convert(*args, **kwargs) -> Any:
         nargs: List[Any] = []
         nkwargs: Dict[str, Any] = {}
 
-        dss: Optional[PandasDataSet] = ds
+        dss: Optional[PandasDataset] = ds
 
         if bound:
             obj, args = args[0], args[1:]
             if dss is None:
-                if isinstance(obj, PandasDataSet):
+                if isinstance(obj, PandasDataset):
                     dss = obj
                 elif isinstance(obj, PandasAttribute):
                     dss = obj.dataset
 
         def wrap(
-            v: Any, ds: PandasDataSet
-        ) -> Union[PandasAttribute, PandasDataSet, Any]:
+            v: Any, ds: PandasDataset
+        ) -> Union[PandasAttribute, PandasDataset, Any]:
             if isinstance(v, pd.DataFrame):
-                nds = PandasDataSet(v)
+                nds = PandasDataset(v)
                 nds.schema = ds.schema
                 return nds
             elif isinstance(v, pd.Series):
@@ -46,7 +46,7 @@ def proxy(
         def conv(arg: Any) -> Any:
             if isinstance(arg, PandasAttribute):
                 return arg.series
-            elif isinstance(arg, PandasDataSet):
+            elif isinstance(arg, PandasDataset):
                 return arg.df
             return arg
 
@@ -61,7 +61,7 @@ def proxy(
         else:
             res = f(*nargs, **nkwargs)
 
-        if isinstance(dss, PandasDataSet):
+        if isinstance(dss, PandasDataset):
             return wrap(res, dss)
 
         return res
@@ -72,7 +72,7 @@ def proxy(
 class PandasAttribute(Attribute):
     def __init__(
         self,
-        dataset: "PandasDataSet",
+        dataset: "PandasDataset",
         series: pd.Series,
         schema: Optional[AttributeSchema] = None,
     ) -> None:
@@ -93,7 +93,7 @@ class PandasAttribute(Attribute):
         self._schema = schema
 
     @property
-    def dataset(self) -> "PandasDataSet":
+    def dataset(self) -> "PandasDataset":
         return self._dataset
 
     @property
@@ -159,10 +159,10 @@ class PandasAttribute(Attribute):
         return self
 
 
-class PandasDataSet(DataSet):
+class PandasDataset(Dataset):
 
     """
-    An implementation of a :class:`~algoneer.dataset.DataSet` object relying
+    An implementation of a :class:`~algoneer.dataset.Dataset` object relying
     on a :class:`pandas.DataFrame`.
     """
 
@@ -190,7 +190,7 @@ class PandasDataSet(DataSet):
         return self._df
 
     @proxy
-    def __getitem__(self, item) -> Union["PandasDataSet", PandasAttribute]:
+    def __getitem__(self, item) -> Union["PandasDataset", PandasAttribute]:
         v = self._df.__getitem__(item)
         return v
 
@@ -247,13 +247,13 @@ class PandasDataSet(DataSet):
         return self._df.mean()
 
     @proxy
-    def select(self, indexes: Union[Iterable[int], slice]) -> "PandasDataSet":
+    def select(self, indexes: Union[Iterable[int], slice]) -> "PandasDataset":
         return self._df.iloc[indexes, :].copy()
 
-    def copy(self) -> "PandasDataSet":
+    def copy(self) -> "PandasDataset":
 
         # we initialize a new dataset with a copy of the dataframe
-        ds = PandasDataSet(self._df.copy())
+        ds = PandasDataset(self._df.copy())
         # we copy the schema as well
         ds.schema = self.schema
 
@@ -263,17 +263,17 @@ class PandasDataSet(DataSet):
         # to do: implement this
         pass
 
-    # Static helper methods (to create PandasDataSet objects)
+    # Static helper methods (to create PandasDataset objects)
 
     @staticmethod
-    def from_dataset(dataset: DataSet) -> "PandasDataSet":
-        if not isinstance(dataset, PandasDataSet):
-            raise ValueError("cannot convert to PandasDataSet right now")
+    def from_dataset(dataset: Dataset) -> "PandasDataset":
+        if not isinstance(dataset, PandasDataset):
+            raise ValueError("cannot convert to PandasDataset right now")
         # we simply make a copy of the dataset
         return dataset.copy()
 
     @staticmethod
-    def from_path(path: str) -> "PandasDataSet":
+    def from_path(path: str) -> "PandasDataset":
         spec_filename = os.path.join(path, "dataset.yml")
 
         if not os.path.isfile(spec_filename):
@@ -292,7 +292,7 @@ class PandasDataSet(DataSet):
         else:
             raise ValueError("no loader for type {}".format(t))
 
-        ds = PandasDataSet(df)
+        ds = PandasDataset(df)
 
         # we assign the data schema to the dataset
         schema = DataSchema(c.get("schema", {}))
@@ -303,18 +303,18 @@ class PandasDataSet(DataSet):
 
         return ds
 
-    def __sub__(self, other: "DataSet") -> "PandasDataSet":
-        assert isinstance(other, PandasDataSet)
-        ds = PandasDataSet(self.df - other.df)
+    def __sub__(self, other: "Dataset") -> "PandasDataset":
+        assert isinstance(other, PandasDataset)
+        ds = PandasDataset(self.df - other.df)
         ds.schema = self.schema
         return ds
 
-    def __add__(self, other: "DataSet") -> "PandasDataSet":
-        assert isinstance(other, PandasDataSet)
-        ds = PandasDataSet(self.df + other.df)
+    def __add__(self, other: "Dataset") -> "PandasDataset":
+        assert isinstance(other, PandasDataset)
+        ds = PandasDataset(self.df + other.df)
         ds.schema = self.schema
         return ds
 
     @proxy
-    def order_by(self, columns: Iterable[str]) -> "PandasDataSet":
+    def order_by(self, columns: Iterable[str]) -> "PandasDataset":
         return self.df.sort_values(columns).reset_index(drop=True)

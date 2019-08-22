@@ -3,8 +3,8 @@ from .algorithm import Algorithm
 import sklearn
 
 from algoneer.algorithmschema import AlgorithmSchema
-from algoneer.dataset.pandas import PandasDataSet
-from algoneer.dataset import DataSet
+from algoneer.dataset.pandas import PandasDataset
+from algoneer.dataset import Dataset
 
 from algoneer.model.sklearn import SklearnModel
 from algoneer.model import Model
@@ -36,13 +36,13 @@ class SklearnAlgorithm(Algorithm):
 
         super().__init__(schema=schema)
 
-    def fit(self, dataset: DataSet) -> Model:
+    def fit(self, dataset: Dataset) -> Model:
         """
         Fits a dataset to the estimator. To do this, we convert the dataset
         into a pandas dataframe first.
         """
 
-        pd_dataset = PandasDataSet.from_dataset(dataset)
+        pd_dataset = PandasDataset.from_dataset(dataset)
 
         # we get the attributes that have the "x" role assigned to them
         x = pd_dataset.roles.x

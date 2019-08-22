@@ -7,7 +7,7 @@ learning models.
 """
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
-from algoneer import DataSet, Model, ModelTest, Attribute
+from algoneer import Dataset, Model, ModelTest, Attribute
 
 from collections import defaultdict
 
@@ -26,7 +26,7 @@ class ALE(ModelTest):
     def run(
         self,
         model: Model,
-        dataset: DataSet,
+        dataset: Dataset,
         columns: Optional[Sequence[str]] = None,
         n_intervals: int = 10,
         max_datapoints: int = None,
@@ -43,7 +43,7 @@ class ALE(ModelTest):
         cvs: Dict[str, Iterable[Any]] = {}
 
         def ALE(
-            ds: DataSet, model: Model, column: str
+            ds: Dataset, model: Model, column: str
         ) -> List[Tuple[float, float, float]]:
 
             ys: List[Tuple[float, float, float]] = []
@@ -67,10 +67,10 @@ class ALE(ModelTest):
                     continue
                 vs[column] = min_v
                 y_min = model.predict(vs)
-                assert isinstance(y_min, DataSet)
+                assert isinstance(y_min, Dataset)
                 vs[column] = max_v
                 y_max = model.predict(vs)
-                assert isinstance(y_max, DataSet)
+                assert isinstance(y_max, Dataset)
                 dy = float((y_max - y_min).mean())
                 dx = max_v - min_v
                 ales.append((min_v, max_v, dy))

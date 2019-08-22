@@ -1,2 +1,2 @@
-class DataSetTest:
+class DatasetTest:
     pass

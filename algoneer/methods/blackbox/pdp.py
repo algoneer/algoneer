@@ -7,7 +7,7 @@ learning models.
 """
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
-from algoneer import DataSet, Model, ModelTest, Attribute
+from algoneer import Dataset, Model, ModelTest, Attribute
 
 from collections import defaultdict
 
@@ -26,7 +26,7 @@ class PDP(ModelTest):
     def run(
         self,
         model: Model,
-        dataset: DataSet,
+        dataset: Dataset,
         columns: Optional[Sequence[str]] = None,
         max_values: int = None,
         max_datapoints: int = None,
@@ -73,7 +73,7 @@ class PDP(ModelTest):
 
             cvs[column] = vs
 
-        def pdp(ds: DataSet, model: Model, column: str) -> List[Tuple[float, float]]:
+        def pdp(ds: Dataset, model: Model, column: str) -> List[Tuple[float, float]]:
 
             ys: List[Tuple[float, float]] = []
 
@@ -99,7 +99,7 @@ class PDP(ModelTest):
             return ys
 
         def pdp_correlated(
-            ds: DataSet, model: Model, column_a: str, column_b: str
+            ds: Dataset, model: Model, column_a: str, column_b: str
         ) -> List[Tuple[float, float, float]]:
             """
             Generate the partial dependence for a categorical attribute
