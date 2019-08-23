@@ -22,10 +22,12 @@ class DataSchema(metaclass=DataSchemaMeta):
     ):
         if schema is not None:
             self._attributes = parse_attributes(self, schema)
+        else:
+            self._attributes = {}
         if attributes is None:
             for key, attribute in self.__class__._predefined_attributes.items():
                 attribute.dataschema = self
-                self._attributes[key] = attribute
+                self._attributes[key] = attribute.copy()
         else:
             self._attributes = attributes
 
@@ -41,7 +43,7 @@ class DataSchema(metaclass=DataSchemaMeta):
         new_attributes = {}
         for key, attribute in self._attributes.items():
             new_attributes[key] = attribute.copy()
-        return DataSchema(attributes=new_attributes)
+        return type(self)(attributes=new_attributes)
 
 
 def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:

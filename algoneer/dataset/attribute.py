@@ -8,14 +8,12 @@ import abc
 
 
 class Attribute(abc.ABC):
-    @abc.abstractmethod
     def __init__(
-        self,
-        dataset: "algoneer.dataset.Dataset",
-        column: str,
-        schema: Optional[AttributeSchema],
+        self, dataset: "algoneer.dataset.Dataset", column: str, schema: AttributeSchema
     ) -> None:
-        pass
+        self._schema = schema
+        self._column = column
+        self._dataset = dataset
 
     def __getattr__(self, attr):
         if attr.startswith("is_"):
@@ -25,35 +23,29 @@ class Attribute(abc.ABC):
             return False
         raise AttributeError("not found")
 
-    @property  # type: ignore
-    @abc.abstractmethod
+    @property
     def column(self) -> str:
-        pass
+        return self._column
 
-    @column.setter  # type: ignore
-    @abc.abstractmethod
+    @column.setter
     def column(self, column: str) -> None:
-        pass
+        self._column = column
 
-    @property  # type: ignore
-    @abc.abstractmethod
+    @property
     def roles(self) -> Iterable[str]:
-        pass
+        return self._schema.roles
 
-    @property  # type: ignore
-    @abc.abstractmethod
-    def schema(self) -> Optional[AttributeSchema]:
-        pass
+    @property
+    def schema(self) -> AttributeSchema:
+        return self._schema
 
-    @schema.setter  # type: ignore
-    @abc.abstractmethod
-    def schema(self, schema: Optional[AttributeSchema]) -> None:
-        pass
+    @schema.setter
+    def schema(self, schema: AttributeSchema) -> None:
+        self._schema = schema
 
-    @property  # type: ignore
-    @abc.abstractmethod
+    @property
     def dataset(self):
-        pass
+        return self._dataset
 
     @abc.abstractmethod
     def __len__(self) -> int:

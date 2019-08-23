@@ -11,6 +11,9 @@ class Dataset(abc.ABC):
     """Describes a collection of :class:`~algoneer.datapoint.DataPoint` objects.
     """
 
+    def __init__(self, schema: DataSchema) -> None:
+        self._schema = schema
+
     @property
     def roles(self):
         return Roles(self)
@@ -27,11 +30,11 @@ class Dataset(abc.ABC):
 
     @property  # type: ignore
     def schema(self) -> DataSchema:
-        pass
+        return self._schema
 
     @schema.setter  # type: ignore
     def schema(self, schema: DataSchema) -> None:
-        pass
+        self._schema = schema
 
     @abc.abstractmethod
     def __getitem__(self, item) -> Union["Dataset", Attribute]:

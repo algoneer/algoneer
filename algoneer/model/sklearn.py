@@ -25,4 +25,4 @@ class SklearnModel(Model):
         # we predict the value using an sklearn estimator
         y = pd.DataFrame(self._estimator.predict(x.df))
 
-        return PandasDataset(y)
+        return PandasDataset(dataset.roles.y.schema, y)

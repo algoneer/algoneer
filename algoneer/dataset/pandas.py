@@ -33,14 +33,12 @@ def proxy(
             v: Any, ds: PandasDataset
         ) -> Union[PandasAttribute, PandasDataset, Any]:
             if isinstance(v, pd.DataFrame):
-                nds = PandasDataset(v)
-                nds.schema = ds.schema
+                nds = PandasDataset(ds.schema, v)
                 return nds
             elif isinstance(v, pd.Series):
-                schema = None
-                if ds.schema is not None:
-                    schema = ds.schema.attributes.get(v.name)
-                return PandasAttribute(ds, v, schema)
+                schema = ds.schema.attributes.get(v.name)
+                assert schema is not None
+                return PandasAttribute(ds, v.name, schema, v)
             return v
 
         def conv(arg: Any) -> Any:
@@ -73,42 +71,15 @@ class PandasAttribute(Attribute):
     def __init__(
         self,
         dataset: "PandasDataset",
+        column: str,
+        schema: AttributeSchema,
         series: pd.Series,
-        schema: Optional[AttributeSchema] = None,
     ) -> None:
 
+        super().__init__(dataset, column, schema)
+
         d = self.__dict__
-
-        d["_dataset"] = dataset
-        d["_schema"] = schema
-        d["_column"] = series.name
         d["_series"] = series
-
-    @property
-    def schema(self) -> Optional[AttributeSchema]:
-        return self._schema
-
-    @schema.setter
-    def schema(self, schema: Optional[AttributeSchema]) -> None:
-        self._schema = schema
-
-    @property
-    def dataset(self) -> "PandasDataset":
-        return self._dataset
-
-    @property
-    def roles(self) -> Iterable[str]:
-        if self._schema is None:
-            return []
-        return self._schema.roles
-
-    @property
-    def column(self) -> str:
-        return self._column
-
-    @column.setter
-    def column(self, column: str) -> None:
-        self._column = column
 
     @property
     def series(self) -> pd.Series:
@@ -166,10 +137,10 @@ class PandasDataset(Dataset):
     on a :class:`pandas.DataFrame`.
     """
 
-    def __init__(self, df: pd.DataFrame) -> None:
+    def __init__(self, schema: DataSchema, df: pd.DataFrame) -> None:
         # we need to use __dict__ since we overwrote the __getattr__ function
+        super().__init__(schema)
         self.__dict__["_df"] = df
-        self.__dict__["_schema"] = None
         self._generate_attributes()
 
     def _generate_attributes(self) -> None:
@@ -181,7 +152,7 @@ class PandasDataset(Dataset):
             else:
                 attributeschema = None
             attributes[column] = PandasAttribute(
-                self, self._df[column], attributeschema
+                self, column, self._df[column], attributeschema
             )
         self.__dict__["_attributes"] = attributes
 
@@ -227,16 +198,6 @@ class PandasDataset(Dataset):
         return self._attributes
 
     @property
-    def schema(self) -> DataSchema:
-        return self._schema
-
-    @schema.setter
-    def schema(self, schema: DataSchema) -> None:
-        self._schema = schema
-        # we regenerate the attributes
-        self._generate_attributes()
-
-    @property
     def shape(self) -> Tuple:
         return self._df.shape
 
@@ -253,7 +214,7 @@ class PandasDataset(Dataset):
     def copy(self) -> "PandasDataset":
 
         # we initialize a new dataset with a copy of the dataframe
-        ds = PandasDataset(self._df.copy())
+        ds = PandasDataset(self.schema.copy(), self._df.copy())
         # we copy the schema as well
         ds.schema = self.schema
 
@@ -292,27 +253,20 @@ class PandasDataset(Dataset):
         else:
             raise ValueError("no loader for type {}".format(t))
 
-        ds = PandasDataset(df)
-
         # we assign the data schema to the dataset
         schema = DataSchema(c.get("schema", {}))
-
-        # we enforce the data schema on the dataset
-        schema.enforce(ds)
-        ds.schema = schema
+        ds = PandasDataset(schema, df)
 
         return ds
 
     def __sub__(self, other: "Dataset") -> "PandasDataset":
         assert isinstance(other, PandasDataset)
-        ds = PandasDataset(self.df - other.df)
-        ds.schema = self.schema
+        ds = PandasDataset(self.schema, self.df - other.df)
         return ds
 
     def __add__(self, other: "Dataset") -> "PandasDataset":
         assert isinstance(other, PandasDataset)
-        ds = PandasDataset(self.df + other.df)
-        ds.schema = self.schema
+        ds = PandasDataset(self.schema, self.df + other.df)
         return ds
 
     @proxy

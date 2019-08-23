@@ -58,7 +58,7 @@ class AttributeSchema:
         return self._column
 
     def copy(self):
-        return AttributeSchema(
+        return type(self)(
             roles=self.roles,
             type=self.type,
             ds=self.dataschema,
