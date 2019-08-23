@@ -1,4 +1,4 @@
-algoneer_datasets==0.0.8
+algoneer_datasets==0.0.9
 black==19.3b0
 mypy==0.720
 requests==2.22.0
