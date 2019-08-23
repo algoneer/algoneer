@@ -19,9 +19,9 @@ class AttributeSchema:
 
     def __init__(
         self,
-        ds: "algoneer.dataschema.DataSchema",
         roles: Iterable[str],
         type: Type,
+        ds: Optional["algoneer.dataschema.DataSchema"] = None,
         column: Optional[str] = None,
         config: Optional[Mapping[str, Any]] = None,
     ) -> None:
@@ -32,6 +32,14 @@ class AttributeSchema:
         self._column = column
         self._roles = roles
         self._config = config
+
+    @property
+    def dataschema(self):
+        return self._ds
+
+    @dataschema.setter
+    def dataschema(self, ds):
+        self._ds = ds
 
     @property
     def config(self):
@@ -48,6 +56,15 @@ class AttributeSchema:
     @property
     def column(self):
         return self._column
+
+    def copy(self):
+        return AttributeSchema(
+            roles=self.roles,
+            type=self.type,
+            ds=self.dataschema,
+            column=self.column,
+            config=self.config,
+        )
 
     def enforce(self, ds: "algoneer.dataset.Dataset"):
         attribute = ds[self.column]
