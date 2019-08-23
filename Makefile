@@ -19,4 +19,4 @@ update:
 
 release:
 	python3 setup.py sdist
-	twine upload dist/* -u ${TWINE_USER} -p ${TWINE_PASSWORD}
+	twine upload --skip-existing dist/* -u ${TWINE_USER} -p ${TWINE_PASSWORD}
