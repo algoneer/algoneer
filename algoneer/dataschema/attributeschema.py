@@ -1,6 +1,6 @@
 from enum import Enum
 
-from typing import Mapping, Iterable, Any
+from typing import Mapping, Iterable, Any, Optional
 
 import algoneer.dataschema
 import algoneer.dataset
@@ -20,11 +20,13 @@ class AttributeSchema:
     def __init__(
         self,
         ds: "algoneer.dataschema.DataSchema",
-        column: str,
         roles: Iterable[str],
         type: Type,
-        config: Mapping[str, Any],
+        column: Optional[str] = None,
+        config: Optional[Mapping[str, Any]] = None,
     ) -> None:
+        if config is None:
+            config = {}
         self._ds = ds
         self._type = type
         self._column = column
