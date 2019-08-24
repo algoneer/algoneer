@@ -25,8 +25,6 @@ class SklearnAlgorithm(Algorithm):
         self._estimator_class = estimator_class
         self._kwargs = kwargs
 
-        schema: Optional[AlgorithmSchema] = None
-
         if issubclass(estimator_class, sklearn.base.ClassifierMixin):
             schema = AlgorithmSchema(type=AlgorithmSchema.Type.Classifier)
         elif issubclass(estimator_class, sklearn.base.RegressorMixin):

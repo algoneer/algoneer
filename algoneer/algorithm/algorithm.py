@@ -8,7 +8,7 @@ from typing import Optional
 
 
 class Algorithm(abc.ABC):
-    def __init__(self, schema: Optional[AlgorithmSchema] = None) -> None:
+    def __init__(self, schema: AlgorithmSchema) -> None:
         self._schema = schema
 
     def __getattr__(self, attr):
@@ -19,12 +19,12 @@ class Algorithm(abc.ABC):
             return False
         return super().__getattr__(attr)
 
-    @property  # type: ignore
-    def schema(self) -> Optional[AlgorithmSchema]:
+    @property
+    def schema(self) -> AlgorithmSchema:
         return self._schema
 
-    @schema.setter  # type: ignore
-    def schema(self, schema: Optional[AlgorithmSchema]) -> None:
+    @schema.setter
+    def schema(self, schema: AlgorithmSchema) -> None:
         self.schema = schema
 
     @abc.abstractmethod
