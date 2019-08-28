@@ -1,9 +1,10 @@
 from algoneer.dataschema import DataSchema
 from .roles import Roles
+from .datapoint import Datapoint
 from .attribute import Attribute
 import abc
 
-from typing import Iterable, Mapping, Tuple, Union
+from typing import Iterable, Mapping, Tuple, Union, Any, Iterator
 
 
 class Dataset(abc.ABC):
@@ -17,6 +18,10 @@ class Dataset(abc.ABC):
     @property
     def roles(self):
         return Roles(self)
+
+    @abc.abstractmethod
+    def datapoint(self, index: Any) -> Datapoint:
+        pass
 
     @property
     @abc.abstractmethod
@@ -46,6 +51,10 @@ class Dataset(abc.ABC):
 
     @abc.abstractmethod
     def __delitem__(self, item):
+        pass
+
+    @abc.abstractmethod
+    def __iter__(self) -> Iterator:
         pass
 
     @abc.abstractmethod

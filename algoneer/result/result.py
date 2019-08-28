@@ -3,12 +3,13 @@ import abc
 from typing import Dict, Any
 
 
-class Result(abc.ABC):
-    @property
-    @abc.abstractmethod
-    def data(self) -> Dict[str, Any]:
-        pass
+class Result:
+    def __init__(self, data: Dict[str, Any]):
+        self._data = data
 
-    @abc.abstractmethod
+    @property
+    def data(self) -> Dict[str, Any]:
+        return self._data
+
     def format(self, format: str) -> Any:
         pass

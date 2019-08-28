@@ -16,7 +16,7 @@ class Model(abc.ABC):
         return results
 
     @abc.abstractmethod
-    def predict(self, dataset: Dataset) -> Union[Dataset, Attribute]:
+    def predict(self, dataset: Dataset) -> Dataset:
         pass
 
     @property

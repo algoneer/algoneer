@@ -1,6 +1,18 @@
-from typing import Optional, Mapping, Iterable, Dict, Any, List, Tuple, Union, Callable
+from typing import (
+    Optional,
+    Mapping,
+    Iterable,
+    Dict,
+    Any,
+    List,
+    Tuple,
+    Union,
+    Callable,
+    Iterator,
+)
 
 import functools
+import inspect
 import pandas as pd
 import os
 import yaml
@@ -8,6 +20,7 @@ import yaml
 from .dataset import Dataset
 from .roles import Roles
 from .attribute import Attribute
+from .datapoint import Datapoint
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
@@ -67,6 +80,23 @@ def proxy(
     return convert
 
 
+class PandasDatapoint(Datapoint):
+    def __init__(self, dataset: "PandasDataset", index: Any) -> None:
+        self._dataset = dataset
+        self._index = index
+
+    @property
+    def dataset(self) -> Dataset:
+        return self._dataset
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return self._dataset.df.iloc[self._index].to_dict()
+
+    def copy(self) -> "PandasDatapoint":
+        return PandasDatapoint(self._dataset, self._index)
+
+
 class PandasAttribute(Attribute):
     def __init__(
         self,
@@ -121,7 +151,7 @@ class PandasAttribute(Attribute):
 
         v = getattr(self._series, attr)
         # if this is a callable function we wrap it in a proxy decorator
-        if callable(v):
+        if callable(v) and not inspect.isclass(v):
             return proxy(v, bound=False, ds=self)
         return v
 
@@ -156,6 +186,9 @@ class PandasDataset(Dataset):
             )
         self.__dict__["_attributes"] = attributes
 
+    def datapoint(self, index: Any) -> PandasDatapoint:
+        return PandasDatapoint(self, index)
+
     @property
     def df(self) -> pd.DataFrame:
         return self._df
@@ -173,6 +206,9 @@ class PandasDataset(Dataset):
     def __delitem__(self, item):
         return self._df.__delitem(item)
 
+    def __iter__(self) -> Iterator:
+        return self._df.iterrows()
+
     def __len__(self) -> int:
         return len(self._df)
 
@@ -185,7 +221,7 @@ class PandasDataset(Dataset):
 
         v = getattr(self._df, attr)
         # if this is a callable function we wrap it in a proxy decorator
-        if callable(v):
+        if callable(v) and not inspect.isclass(v):
             return proxy(v, bound=False, ds=self)
         return v
 
@@ -208,8 +244,13 @@ class PandasDataset(Dataset):
         return self._df.mean()
 
     @proxy
-    def select(self, indexes: Union[Iterable[int], slice]) -> "PandasDataset":
-        return self._df.iloc[indexes, :].copy()
+    def select(
+        self, indexes: Union[int, Iterable[int], slice], copy: bool = True
+    ) -> "PandasDataset":
+        ndf = self._df.iloc[indexes, :]
+        if copy:
+            return ndf.copy()
+        return ndf
 
     def copy(self) -> "PandasDataset":
 

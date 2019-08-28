@@ -7,7 +7,7 @@ learning models.
 """
 
 from typing import Iterable, Any, Dict
-from algoneer import Dataset, Model, ModelTest, Attribute
+from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
 from algoneer.result import DatapointModelResult, Result
 
 from collections import defaultdict
@@ -36,4 +36,11 @@ class Predictions(ModelTest):
     def run(
         self, model: Model, dataset: Dataset, max_datapoints: int = None
     ) -> Iterable[DatapointModelResult]:
-        return []
+        Y = model.predict(dataset)
+        results = []
+        for y in Y:
+            ind, pred = y
+            dp = dataset.datapoint(ind)
+            results.append(DatapointModelResult({"pred": float(pred)}, dp, model))
+
+        return results

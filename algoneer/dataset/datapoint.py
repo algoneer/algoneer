@@ -1,6 +1,7 @@
-from .dataset import Dataset
-
+import algoneer
 import abc
+
+from typing import Dict, Any
 
 
 class Datapoint(abc.ABC):
@@ -10,9 +11,14 @@ class Datapoint(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def dataset(self) -> Dataset:
+    def dataset(self) -> "algoneer.Dataset":
         pass
 
     @abc.abstractmethod
     def copy(self) -> "Datapoint":
+        pass
+
+    @property
+    @abc.abstractmethod
+    def data(self) -> Dict[str, Any]:
         pass

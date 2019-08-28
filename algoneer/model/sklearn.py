@@ -4,10 +4,8 @@ import pandas as pd
 import sklearn
 
 from algoneer.dataset.pandas import PandasDataset
-from algoneer.dataset import Dataset, Attribute
+from algoneer.dataset import Dataset
 from algoneer.algorithm import Algorithm
-
-from typing import Union
 
 
 class SklearnModel(Model):
@@ -15,7 +13,7 @@ class SklearnModel(Model):
         super().__init__(algorithm=algorithm)
         self._estimator = estimator
 
-    def predict(self, dataset: Dataset) -> Union[Dataset, Attribute]:
+    def predict(self, dataset: Dataset) -> Dataset:
 
         pd_dataset = PandasDataset.from_dataset(dataset)
 
