@@ -1,5 +1,5 @@
 from typing import Optional, Callable, Dict, Any
-from .object import Object
+from .object import APIObject
 import requests
 
 

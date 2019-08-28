@@ -1,5 +1,5 @@
-from .object import Object
+from .object import APIObject
 
 
-class Dataset(Object):
+class APIDataset(APIObject):
     pass

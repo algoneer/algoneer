@@ -1,5 +1,5 @@
-from .object import Object
+from .object import APIObject
 
 
-class ModelResult(Object):
+class APIModelResult(APIObject):
     pass

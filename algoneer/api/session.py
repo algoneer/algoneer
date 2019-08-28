@@ -1,2 +1,2 @@
-class Session:
+class APISession:
     pass

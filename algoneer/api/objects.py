@@ -1,25 +1,29 @@
-from typing import Type, List
-from .object import Object
+from typing import Type, List, TypeVar, Generic
+from .object import APIObject
 from .client import Client
 import abc
 
+from typing import TypeVar, Generic
 
-class Objects(abc.ABC):
+T = TypeVar("T", bound=APIObject)
 
-    Type: Type[Object]
+
+class APIObjects(abc.ABC, Generic[T]):
+
+    Type: Type[T]
     list_url: str
     object_url: str
 
     def __init__(self, client: Client) -> None:
         self.client = client
 
-    def list(self, **kwargs) -> List[Object]:
+    def list(self, **kwargs) -> List[T]:
         """
         List 
         """
         return []
 
-    def get(self, id: str, **kwargs) -> Object:
+    def get(self, id: str, **kwargs) -> T:
         """
         Get an object by its ID.
         """
@@ -33,7 +37,7 @@ class Objects(abc.ABC):
         assert response.data is not None
         return self.Type(response.data)
 
-    def create(self, obj: Object, **kwargs) -> bool:
+    def create(self, obj: T, **kwargs) -> bool:
         """
         Create a new object.
         """
@@ -46,7 +50,7 @@ class Objects(abc.ABC):
         obj.data = response.data
         return True
 
-    def update(self, obj: Object, **kwargs) -> bool:
+    def update(self, obj: T, **kwargs) -> bool:
         """
         Update an existing object.
         """
@@ -60,7 +64,7 @@ class Objects(abc.ABC):
         obj.data = response.data
         return True
 
-    def delete(self, obj: Object, **kwargs) -> bool:
+    def delete(self, obj: T, **kwargs) -> bool:
         """
         Delete an existing ovject.
         """

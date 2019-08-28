@@ -1,12 +1,14 @@
 from typing import Dict, Any, Optional
 
+import abc
 
-class Object:
+
+class APIObject(abc.ABC):
     """
     All API objects inherit from this class.
     """
 
-    def __init__(self, data: Dict[str, Any]) -> None:
+    def __init__(self, data: Dict[str, Any]):
         self._data = data
 
     @property
