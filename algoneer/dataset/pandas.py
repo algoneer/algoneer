@@ -90,6 +90,10 @@ class PandasDatapoint(Datapoint):
         return self._dataset
 
     @property
+    def index(self) -> Any:
+        return self._index
+
+    @property
     def data(self) -> Dict[str, Any]:
         return self._dataset.df.iloc[self._index].to_dict()
 

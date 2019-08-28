@@ -36,6 +36,6 @@ class Predictions(ModelTest):
         for y in Y:
             ind, pred = y
             dp = dataset.datapoint(ind)
-            results.append(PredictionsResult({"pred": float(pred)}, dp, model))
+            results.append(PredictionsResult({"p": float(pred)}, dp, model))
 
         return results

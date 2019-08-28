@@ -20,5 +20,10 @@ class Datapoint(abc.ABC):
 
     @property
     @abc.abstractmethod
+    def index(self) -> Any:
+        pass
+
+    @property
+    @abc.abstractmethod
     def data(self) -> Dict[str, Any]:
         pass

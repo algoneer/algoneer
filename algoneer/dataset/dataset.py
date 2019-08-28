@@ -9,7 +9,7 @@ from typing import Iterable, Mapping, Tuple, Union, Any, Iterator
 
 class Dataset(abc.ABC):
 
-    """Describes a collection of :class:`~algoneer.datapoint.DataPoint` objects.
+    """Describes a collection of datapoints.
     """
 
     def __init__(self, schema: DataSchema) -> None:
