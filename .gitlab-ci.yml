@@ -7,6 +7,7 @@ stages:
 test:
   stage: test
   before_script:
+    - pip3 install virtualenv
     - make setup
   script:
     - make
@@ -27,6 +28,7 @@ docs:
   before_script:
     - apt-get update -qy
     - apt-get install -y locales rsync openssh-client
+    - pip3 install virtualenv
     - echo "en_US UTF-8" > /etc/locale.gen
     - locale-gen en_US.UTF-8
     - export LANG=en_US.UTF-8
