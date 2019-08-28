@@ -19,14 +19,31 @@ so that you can edit them and see changes immediately:
 
     pip install -e .
 
-If you want to run tests, please also install test dependencies:
+If you want to run tests, please also install test dependencies and a virtual
+environment:
 
-    pip install -r requirements-test.txt --no-index --find-links wheels
+    make setup
 
 # Information For Developers
 
 The following sections are only relevant for developers of Algoneer, if you
 are a user you can disregard them.
+
+## Running tests
+
+Algoneer comes with automated code formatting via black, static type analysis
+via mypy and testing via py.test / unittest. You can run all of the above
+with a single make command:
+
+    make
+
+To only run tests, simply run
+
+    make test
+
+You can also pass arguments to py.test via the `testargs` parameter:
+
+    make test testargs="-x -k TestDatapoints"
 
 ## Upgrading packages
 
