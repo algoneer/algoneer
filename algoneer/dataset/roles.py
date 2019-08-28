@@ -1,14 +1,16 @@
-import algoneer.dataset as ds
+import algoneer
 
 from typing import List, Union
 
 
 class Roles:
-    def __init__(self, obj: "ds.Dataset") -> None:
+    def __init__(self, obj: "algoneer.dataset.Dataset") -> None:
         d = self.__dict__
         d["_obj"] = obj
 
-    def __getattr__(self, role: str) -> Union["ds.Dataset", "ds.Attribute"]:
+    def __getattr__(
+        self, role: str
+    ) -> Union["algoneer.dataset.Dataset", "algoneer.dataset.Attribute"]:
         """
         We return a dataset or datapoint with all attributes that have the given role
         """
