@@ -8,10 +8,6 @@ class Datapoint(abc.ABC):
     """Describes a single datapoint.
     """
 
-    @abc.abstractmethod
-    def hash(self) -> bytes:
-        pass
-
     @property
     @abc.abstractmethod
     def dataset(self) -> Dataset:
