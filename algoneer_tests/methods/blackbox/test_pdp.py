@@ -1,6 +1,6 @@
 from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
-from algoneer.methods.blackbox.pdp import PDP
+from algoneer.methods.blackbox.pdp import PDP, PDPResult
 
 def test_pdp():
 
@@ -22,4 +22,4 @@ def test_pdp():
     result = pdp.run(model, dataset, columns=columns, max_datapoints=110, max_values=5)
 
     # we make sure that we obtain a reasonable result
-    assert result
+    assert isinstance(result, PDPResult)

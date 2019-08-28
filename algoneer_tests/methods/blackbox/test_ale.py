@@ -1,6 +1,6 @@
 from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
-from algoneer.methods.blackbox.ale import ALE
+from algoneer.methods.blackbox.ale import ALE, ALEResult
 
 def test_ale():
 
@@ -22,4 +22,4 @@ def test_ale():
     result = ale.run(model, dataset, columns=columns, max_datapoints=200, n_intervals=10)
 
     # we make sure that we obtain a reasonable result
-    assert result
+    assert isinstance(result, ALEResult)

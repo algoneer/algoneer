@@ -8,10 +8,15 @@ learning models.
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
 from algoneer import Dataset, Model, ModelTest, Attribute
+from algoneer.result import ModelResult
 
 from collections import defaultdict
 
 import logging
+
+
+class PDPResult(ModelResult):
+    pass
 
 
 class PDP(ModelTest):
@@ -31,10 +36,7 @@ class PDP(ModelTest):
         max_values: int = None,
         max_datapoints: int = None,
         correlated: bool = False,
-    ) -> Union[
-        Dict[str, Dict[str, List[Tuple[float, float, float]]]],
-        Dict[str, List[Tuple[float, float]]],
-    ]:
+    ) -> PDPResult:
         """
         Run the test.
 
@@ -160,7 +162,7 @@ class PDP(ModelTest):
                     correlated_pdps[column_a][column_b] = pdp_correlated(
                         nds, model, column_a, column_b
                     )
-            return correlated_pdps
+            return PDPResult(correlated_pdps, model)
         else:
 
             pdps: Dict[str, List[Tuple[float, float]]] = {}
@@ -168,4 +170,4 @@ class PDP(ModelTest):
                 if columns is not None and not column in columns:
                     continue
                 pdps[column] = pdp(nds, model, column)
-            return pdps
+            return PDPResult(pdps, model)

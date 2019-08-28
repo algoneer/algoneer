@@ -8,10 +8,15 @@ learning models.
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
 from algoneer import Dataset, Model, ModelTest, Attribute
+from algoneer.result import ModelResult
 
 from collections import defaultdict
 
 import logging
+
+
+class ALEResult(ModelResult):
+    pass
 
 
 class ALE(ModelTest):
@@ -31,7 +36,7 @@ class ALE(ModelTest):
         n_intervals: int = 10,
         max_datapoints: int = None,
         correlated: bool = False,
-    ) -> Dict[str, List[Tuple[float, float, float]]]:
+    ) -> ALEResult:
         """
         Run the test.
 
@@ -121,4 +126,4 @@ class ALE(ModelTest):
                 continue
 
             ALEs[column] = ALE(nds, model, column)
-        return ALEs
+        return ALEResult(ALEs, model)
