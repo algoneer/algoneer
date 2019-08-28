@@ -28,11 +28,11 @@ class Dataset(abc.ABC):
     def attributes(self) -> Mapping[str, Attribute]:
         pass
 
-    @property  # type: ignore
+    @property
     def schema(self) -> DataSchema:
         return self._schema
 
-    @schema.setter  # type: ignore
+    @schema.setter
     def schema(self, schema: DataSchema) -> None:
         self._schema = schema
 
@@ -64,7 +64,7 @@ class Dataset(abc.ABC):
     def copy(self) -> "Dataset":
         pass
 
-    @property  # type: ignore
+    @property
     @abc.abstractmethod
     def shape(self) -> Tuple:
         pass

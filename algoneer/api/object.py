@@ -1,5 +1,3 @@
-from algoneer.object import Object as AlgoneerObject
-
 from typing import Dict, Any, Optional
 
 
