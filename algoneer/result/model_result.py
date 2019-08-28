@@ -1,10 +1,10 @@
 import algoneer
 from .result import Result
 
-from typing import Dict, Any
+from typing import Any
 
 
 class ModelResult(Result):
-    def __init__(self, data: Dict[str, Any], model: "algoneer.Model"):
+    def __init__(self, data: Any, model: "algoneer.Model"):
         super().__init__(data)
         self.model = model

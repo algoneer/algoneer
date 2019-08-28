@@ -1,14 +1,14 @@
 import abc
 
-from typing import Dict, Any
+from typing import Any
 
 
 class Result:
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: Any):
         self._data = data
 
     @property
-    def data(self) -> Dict[str, Any]:
+    def data(self) -> Any:
         return self._data
 
     def format(self, format: str) -> Any:
