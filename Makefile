@@ -1,22 +1,44 @@
 TESTARGS := ${testargs}
 
+SHELL := /bin/bash
+
+.PHONY: docs
+
 all: format mypy test
 
 format:
-	black algoneer/
-	black examples/
+	venv/bin/black algoneer/
+	venv/bin/black examples/
 
 mypy:
-	mypy algoneer/
+	venv/bin/mypy algoneer/
 
 test:
-	py.test algoneer_tests ${TESTARGS}
+	venv/bin/py.test algoneer_tests ${TESTARGS}
+
+docs:
+	source venv/bin/activate && cd docs && make html
+
+serve-docs:
+	venv/bin/python -m http.server -d docs/build/html
+
+setup: virtualenv requirements
+
+virtualenv:
+	rm -rf venv
+	virtualenv --python python3 venv
+
+requirements:
+	venv/bin/pip install -r requirements.txt
+	venv/bin/pip install -r requirements-test.txt
+	venv/bin/pip install -r docs/requirements.txt
 
 update:
-	pip3 install pur
-	pur -r requirements.txt
-	pur -r requirements-test.txt
+	venv/bin/pip install pur
+	venv/bin/pur -r requirements.txt
+	venv/bin/pur -r requirements-test.txt
 
 release:
-	python3 setup.py sdist
-	twine upload --skip-existing dist/* -u ${TWINE_USER} -p ${TWINE_PASSWORD}
+	venv/bin/pip install twine
+	venv/bin/python setup.py sdist
+	venv/bin/twine upload --skip-existing dist/* -u ${TWINE_USER} -p ${TWINE_PASSWORD}
