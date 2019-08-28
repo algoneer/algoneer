@@ -13,27 +13,28 @@ Algoneer provides blackbox tests that work on :class:`~algoneer.model.Model`
 objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
 
-To get started we need to install Algoneer, which we can do using pip:
+To get started we need to install Algoneer, which we can do using pip.
+You need at least Python version 3.6 to run Algoneer.
 
 .. code-block:: bash
 
-    pip install algoneer
+    pip3 install algoneer
 
 Algoneer aims to be technology-agnostic and provides wrappers for the most
 popular data processing and machine learning libraries. In this tutorial, we
-are going to use Algoneer in conjunction with `pandas` and `scikit-learn`,
-which we need to install manually.
+are going to use Algoneer in conjunction with `pandas` and `scikit-learn`. In 
+case you have not installed them already, you can do so by typing:
 
 .. code-block:: bash
 
-    pip install pandas scikit-learn
+    pip3 install pandas scikit-learn
 
 Algoneer also provides a separate package with several example datasets that
 make it easy to get started. We can also install them using pip:
 
 .. code-block:: bash
 
-    pip install algoneer_datasets
+    pip3 install algoneer_datasets
 
 That's it, we're good to go! Let's start using Algoneer by loading an example
 dataset and running a test on it. You can find a Jupyter notebook with the
