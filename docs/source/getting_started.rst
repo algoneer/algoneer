@@ -23,7 +23,7 @@ To get started we need to install Algoneer.
 Algoneer aims to be technology-agnostic and provides wrappers for the most
 popular data processing and machine learning libraries. In this tutorial, we
 are going to use Algoneer in conjunction with `pandas` and `scikit-learn`. In 
-case you have not installed them already, you can do so by typing:
+case you have not installed them already, you can do so by executing:
 
 .. code-block:: bash
 
@@ -37,10 +37,11 @@ make it easy to get started. We can also install them using pip:
     pip3 install algoneer_datasets
 
 That's it, we're good to go! Let's start using Algoneer by loading an example
-dataset and running a test on it. You can find a Jupyter notebook with the
-example code `online <https://github.com/algoneer/algoneer/blob/master/examples/bike-sharing/partial-dependence-plot.ipynb>`_
-or in the `examples/bike-sharing/partial-dependence-plot.ipynb` file of the
-repository (for the visualization you will need `matplotlib` installed).
+dataset and running a test on it. 
+
+.. note::
+    You can find the whole
+    example code `on GitHub <https://github.com/algoneer/algoneer/blob/master/examples/bike-sharing/partial-dependence-plot.ipynb>`_.
 
 .. code-block:: python
 
