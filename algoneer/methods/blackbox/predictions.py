@@ -8,10 +8,14 @@ learning models.
 
 from typing import Iterable, Any, Dict
 from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
-from algoneer.result import DatapointModelResult
+from algoneer.result import ModelResult, DatapointModelResult
 
 
-class PredictionsResult(DatapointModelResult):
+class PredictionsDatapointResult(DatapointModelResult):
+    pass
+
+
+class PredictionsResult(ModelResult):
     pass
 
 
@@ -26,12 +30,12 @@ class Predictions(ModelTest):
 
     def run(
         self, model: Model, dataset: Dataset, max_datapoints: int = None
-    ) -> Iterable[DatapointModelResult]:
+    ) -> ModelResult:
         Y = model.predict(dataset)
         results = []
         for y in Y:
             ind, pred = y
             dp = dataset.datapoint(ind)
-            results.append(PredictionsResult({"p": float(pred)}, dp, model))
+            results.append(PredictionsDatapointResult({"p": float(pred)}, dp, model))
 
-        return results
+        return PredictionsResult({}, model, results)
