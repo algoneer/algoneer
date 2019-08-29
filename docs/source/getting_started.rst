@@ -10,7 +10,7 @@ Algoneer provides blackbox tests that work on :class:`~algoneer.model.Model`
 objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
 
-To get started we need to install Algoneer, which we can do using pip.
+To get started we need to install Algoneer.
 
 .. note::
 
