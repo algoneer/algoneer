@@ -14,7 +14,10 @@ objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
 
 To get started we need to install Algoneer, which we can do using pip.
-You need at least Python version 3.6 to run Algoneer.
+
+.. note::
+
+    You need at least Python version 3.6 to run Algoneer.
 
 .. code-block:: bash
 
