@@ -10,10 +10,6 @@ from typing import Iterable, Any, Dict
 from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
 from algoneer.result import DatapointModelResult
 
-from collections import defaultdict
-
-import logging
-
 
 class PredictionsResult(DatapointModelResult):
     pass

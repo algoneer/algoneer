@@ -46,7 +46,7 @@ def proxy(
             v: Any, ds: PandasDataset
         ) -> Union[PandasAttribute, PandasDataset, Any]:
             if isinstance(v, pd.DataFrame):
-                nds = PandasDataset(ds.schema, v)
+                nds = PandasDataset(ds.schema[set(v.columns)], v)
                 return nds
             elif isinstance(v, pd.Series):
                 schema = ds.schema.attributes.get(v.name)
@@ -181,10 +181,7 @@ class PandasDataset(Dataset):
         attributes: Dict[str, PandasAttribute] = {}
         schema = self.schema
         for column in self.columns:
-            if schema:
-                attributeschema = schema.attributes.get(column)
-            else:
-                attributeschema = None
+            attributeschema = schema.attributes[column]
             attributes[column] = PandasAttribute(
                 self, column, attributeschema, self._df[column]
             )

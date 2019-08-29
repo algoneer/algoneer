@@ -4,7 +4,7 @@ from algoneer.dataset import Dataset, Attribute
 from algoneer.result import Result, ResultCollection
 from algoneer.algorithm import Algorithm
 
-from typing import Union, Dict, Iterable
+from typing import Union, Dict, Iterable, Any
 
 
 class Model(abc.ABC):

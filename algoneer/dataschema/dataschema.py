@@ -1,5 +1,8 @@
-from typing import Mapping, Dict, Any, Optional
+# required for OrderedDict
+from __future__ import annotations
 
+from typing import Mapping, Any, Optional, Set
+from collections import OrderedDict
 from .attributeschema import AttributeSchema
 import algoneer.dataset
 
@@ -18,7 +21,7 @@ class DataSchema(metaclass=DataSchemaMeta):
     def __init__(
         self,
         schema: Optional[Mapping[str, Any]] = None,
-        attributes: Optional[Dict[str, AttributeSchema]] = None,
+        attributes: Optional[OrderedDict[str, AttributeSchema]] = None,
     ):
         if schema is not None:
             self._attributes = parse_attributes(self, schema)
@@ -39,16 +42,21 @@ class DataSchema(metaclass=DataSchemaMeta):
     def attributes(self) -> Mapping[str, AttributeSchema]:
         return self._attributes
 
-    def copy(self) -> "DataSchema":
-        new_attributes = {}
+    def __getitem__(self, item: Set[str]) -> "DataSchema":
+        return self.copy(attributes=item)
+
+    def copy(self, attributes: Optional[Set[str]] = None) -> "DataSchema":
+        new_attributes: OrderedDict[str, AttributeSchema] = OrderedDict()
         for key, attribute in self._attributes.items():
+            if attributes is not None and not key in attributes:
+                continue
             new_attributes[key] = attribute.copy()
         return type(self)(attributes=new_attributes)
 
 
 def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
 
-    attributes: Dict[str, AttributeSchema] = {}
+    attributes: OrderedDict[str, AttributeSchema] = OrderedDict()
     for key, attribute in schema.get("attributes", {}).items():
         typestring = attribute.get("type", "unknown")
         try:
