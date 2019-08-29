@@ -6,9 +6,6 @@ Getting Started
    This is a work-in-progress that shows how the pre-alpha version of Algoneer
    works. Please let us know if you should encounter any problems.
 
-Algoneer helps you to better understand your datasets and machine learning
-models and test them for potential problems. Algoneer aims to be simple to use.
-
 Algoneer provides blackbox tests that work on :class:`~algoneer.model.Model`
 objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
