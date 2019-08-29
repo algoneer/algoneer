@@ -24,14 +24,22 @@ serve-docs:
 
 setup: virtualenv requirements
 
-virtualenv:
+docs-setup: virtualenv docs-requirements
+
+teardown:
 	rm -rf venv
+	rm -rf docs/build/*
+
+virtualenv:
 	virtualenv --python python3 venv
+
+docs-requirements:
+	venv/bin/pip install -r docs/requirements.txt
 
 requirements:
 	venv/bin/pip install -r requirements.txt
+	venv/bin/pip install -r requirements-optional.txt
 	venv/bin/pip install -r requirements-test.txt
-	venv/bin/pip install -r docs/requirements.txt
 
 update:
 	venv/bin/pip install pur

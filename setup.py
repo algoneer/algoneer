@@ -8,7 +8,7 @@ setup(
     version="0.0.10",
     author="Andreas Dewes",
     author_email="authors@algoneer.org",
-    license="Mozilla Public License (MPL)",
+    license="MIT",
     url="https://github.com/algoneer/algoneer",
     packages=find_packages(),
     package_data={"": ["*.ini"], "algoneer" : ['py.typed']},
