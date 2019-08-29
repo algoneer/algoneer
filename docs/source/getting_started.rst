@@ -14,7 +14,7 @@ To get started we need to install Algoneer.
 
 .. note::
 
-    You need at least Python version 3.6 to run Algoneer.
+    You need Python version >=3.6 to run Algoneer.
 
 .. code-block:: bash
 
@@ -23,7 +23,7 @@ To get started we need to install Algoneer.
 Algoneer aims to be technology-agnostic and provides wrappers for the most
 popular data processing and machine learning libraries. In this tutorial, we
 are going to use Algoneer in conjunction with `pandas` and `scikit-learn`. In 
-case you have not installed them already, you can do so by executing:
+case you have not installed them already, you can do so by running:
 
 .. code-block:: bash
 
@@ -41,7 +41,7 @@ dataset and running a test on it.
 
 .. note::
     You can find the whole
-    example code `on GitHub <https://github.com/algoneer/algoneer/blob/master/examples/bike-sharing/partial-dependence-plot.ipynb>`_.
+    example code `on GitHub <https://github.com/algoneer/algoneer/tree/master/examples/bike-sharing>`_.
 
 .. code-block:: python
 
