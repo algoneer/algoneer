@@ -186,7 +186,7 @@ class PandasDataset(Dataset):
             else:
                 attributeschema = None
             attributes[column] = PandasAttribute(
-                self, column, self._df[column], attributeschema
+                self, column, attributeschema, self._df[column]
             )
         self.__dict__["_attributes"] = attributes
 
