@@ -1,6 +1,3 @@
-# required for OrderedDict
-from __future__ import annotations
-
 from typing import Mapping, Any, Optional, Set
 from collections import OrderedDict
 from .attributeschema import AttributeSchema
@@ -21,7 +18,7 @@ class DataSchema(metaclass=DataSchemaMeta):
     def __init__(
         self,
         schema: Optional[Mapping[str, Any]] = None,
-        attributes: Optional[OrderedDict[str, AttributeSchema]] = None,
+        attributes: "Optional[OrderedDict[str, AttributeSchema]]" = None,
     ):
         if schema is not None:
             self._attributes = parse_attributes(self, schema)
@@ -46,7 +43,7 @@ class DataSchema(metaclass=DataSchemaMeta):
         return self.copy(attributes=item)
 
     def copy(self, attributes: Optional[Set[str]] = None) -> "DataSchema":
-        new_attributes: OrderedDict[str, AttributeSchema] = OrderedDict()
+        new_attributes: "OrderedDict[str, AttributeSchema]" = OrderedDict()
         for key, attribute in self._attributes.items():
             if attributes is not None and not key in attributes:
                 continue
@@ -56,7 +53,7 @@ class DataSchema(metaclass=DataSchemaMeta):
 
 def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
 
-    attributes: OrderedDict[str, AttributeSchema] = OrderedDict()
+    attributes: "OrderedDict[str, AttributeSchema]" = OrderedDict()
     for key, attribute in schema.get("attributes", {}).items():
         typestring = attribute.get("type", "unknown")
         try:
