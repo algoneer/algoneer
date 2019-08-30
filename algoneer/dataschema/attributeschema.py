@@ -15,7 +15,8 @@ class AttributeSchema:
         Float = 4
         Ordinal = 5
         Categorical = 6
-        Unknown = 7
+        Boolean = 7
+        Unknown = 8
 
     def __init__(
         self,

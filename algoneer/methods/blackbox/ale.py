@@ -28,15 +28,7 @@ class ALE(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(
-        self,
-        model: Model,
-        dataset: Dataset,
-        columns: Optional[Sequence[str]] = None,
-        n_intervals: int = 10,
-        max_datapoints: int = None,
-        correlated: bool = False,
-    ) -> ALEResult:
+    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
         """
         Run the test.
 
@@ -44,6 +36,11 @@ class ALE(ModelTest):
         :param  dataset: The dataset for which to generate the ALE.
         :param columns: The columns for which to generate the ALE. Optional.
         """
+
+        columns: Optional[Sequence[str]] = kwargs.get("columns", None)
+        n_intervals: int = kwargs.get("n_intervals", 10)
+        max_datapoints: int = kwargs.get("max_datapoints", None)
+        correlated: bool = kwargs.get("correlated", False)
 
         cvs: Dict[str, Iterable[Any]] = {}
 

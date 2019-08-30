@@ -13,11 +13,7 @@ from typing import Optional, Mapping, Any, Type
 
 
 class SklearnAlgorithm(Algorithm):
-    def __init__(
-        self,
-        estimator_class: Type[sklearn.base.BaseEstimator],
-        kwargs: Mapping[str, Any] = None,
-    ):
+    def __init__(self, estimator_class: Type[sklearn.base.BaseEstimator], **kwargs):
 
         if kwargs is None:
             kwargs = {}

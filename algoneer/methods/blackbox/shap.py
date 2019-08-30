@@ -7,7 +7,7 @@ learning models.
 """
 
 import shap
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, Optional
 from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
 from algoneer.result import DatapointModelResult, ModelResult
 
@@ -29,9 +29,8 @@ class SHAP(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(
-        self, model: Model, dataset: Dataset, max_datapoints: int = None
-    ) -> SHAPModelResult:
+    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+        max_datapoints = kwargs.get("max_datapoints", None)
         npd = dataset.roles.x.df
         explainer = shap.KernelExplainer(model.predict, npd[:10])
         shap_values = explainer.shap_values(

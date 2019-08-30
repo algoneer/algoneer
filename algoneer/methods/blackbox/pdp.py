@@ -28,15 +28,7 @@ class PDP(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(
-        self,
-        model: Model,
-        dataset: Dataset,
-        columns: Optional[Sequence[str]] = None,
-        max_values: int = None,
-        max_datapoints: int = None,
-        correlated: bool = False,
-    ) -> PDPResult:
+    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
         """
         Run the test.
 
@@ -44,6 +36,11 @@ class PDP(ModelTest):
         :param  dataset: The dataset for which to generate the PDP.
         :param columns: The columns for which to generate the PDP. Optional.
         """
+
+        columns: Optional[Sequence[str]] = kwargs.get("columns", None)
+        max_values: Optional[int] = kwargs.get("max_values", None)
+        max_datapoints: Optional[int] = kwargs.get("max_datapoints", None)
+        correlated: Optional[bool] = kwargs.get("correlated", False)
 
         cvs: Dict[str, Iterable[Any]] = {}
 

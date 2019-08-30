@@ -28,9 +28,8 @@ class Predictions(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(
-        self, model: Model, dataset: Dataset, max_datapoints: int = None
-    ) -> ModelResult:
+    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+        max_datapoints = kwargs.get("max_datapoints", None)
         Y = model.predict(dataset)
         results = []
         for y in Y:

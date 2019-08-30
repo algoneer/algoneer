@@ -174,7 +174,9 @@ class PandasDataset(Dataset):
     def __init__(self, schema: DataSchema, df: pd.DataFrame) -> None:
         # we need to use __dict__ since we overwrote the __getattr__ function
         super().__init__(schema)
-        self.__dict__["_df"] = df
+        # we only select the relevant columns from the dataframe
+        rdf = df[list(schema.attributes.keys())]
+        self.__dict__["_df"] = rdf
         self._generate_attributes()
 
     def _generate_attributes(self) -> None:

@@ -43,10 +43,41 @@ dataset and running a test on it.
     You can find the whole
     example code `on GitHub <https://github.com/algoneer/algoneer/tree/master/examples/bike-sharing>`_.
 
+    from algoneer.dataschema import DataSchema, AttributeSchema as AS
+
+    # we define the data schema for the bike dataset, which helps Algoneer to automatically
+    # run tests on the dataset and any models derived from it
+
+    class BikeSchema(DataSchema):
+
+        # these are the regressands, which have the "x" role
+        instant = AS(type=AS.Type.Integer, roles=["x"])
+        season = AS(type=AS.Type.Categorical, roles=["x"])
+        yr = AS(type=AS.Type.Integer, roles=["x"])
+        mnth = AS(type=AS.Type.Integer, roles=["x"])
+        holiday = AS(type=AS.Type.Boolean, roles=["x"])
+        weekday = AS(type=AS.Type.Integer, roles=["x"])
+        workingday = AS(type=AS.Type.Boolean, roles=["x"])
+        weathersit = AS(type=AS.Type.Categorical, roles=["x"])
+        temp = AS(type=AS.Type.Numerical, roles=["x"])
+        atemp = AS(type=AS.Type.Numerical, roles=["x"])
+        hum = AS(type=AS.Type.Numerical, roles=["x"])
+        windspeed = AS(type=AS.Type.Numerical, roles=["x"])
+
+        # this is the regressor, which has the "y" role
+        cnt = AS(type=AS.Type.Integer, roles=["y"])
+
 .. code-block:: python
 
-    from algoneer_datasets.bike_sharing import load_dataset
-    ds = load_dataset()
+    from algoneer_datasets.bike_sharing import path
+    from algoneer.dataset.pandas import PandasDataset
+
+    # we read the CSV data into a pandas dataframe
+    import pandas as pd
+    df = pd.read_csv(path+'/data.csv.gz')
+
+    # we wrap the dataframe with an Algoneer dataset using the bike schema
+    ds = PandasDataset(BikeSchema(), df)
 
 This creates a :class:`~algoneer.dataset.pandas.PandasDataSet` that contains
 the bike sharing data. This dataset is just a thin wrapper around a pandas
@@ -59,8 +90,13 @@ To do this, we can again import a model from the example datasets library:
 
 .. code-block:: python
 
-    from algoneer_datasets.bike_sharing.algorithms import get_algorithm
-    algo = get_algorithm('random-forest', n_estimators=100)
+    from sklearn.ensemble import RandomForestRegressor
+    from algoneer.algorithm.sklearn import SklearnAlgorithm
+
+    # we wrap the random forest classifier using the SklearnAlgorithm class
+    algo = SklearnAlgorithm(RandomForestRegressor, n_estimators=100)
+
+    # we produce a model by training the algorithm with a dataset
     model = algo.fit(ds)
 
 Again, the :class:`~algoneer.algorithm.Algorithm` class is just a thin wrapper
@@ -70,9 +106,9 @@ Now that we have trained our model, we can run a simple black box test on it:
 
 .. code-block:: python
 
-    from algoneer.methods.blackbox.pdp import PDP
+    from algoneer.methods.blackbox.shap import SHAP
 
-    pdp = PDP()
+    shap = SHAP()
 
 This so-called partial dependence plot is a simple test that quantifies the
 average effect that a given attribute has on the prediction of a machine
@@ -83,12 +119,10 @@ Let's run it on our model:
 
 .. code-block:: python
 
-    result = pdp.run(model, ds, max_values=20, max_datapoints=100)
+    result = shap.run(model, ds, max_datapoints=100)
 
-Here, `max_values` specifies the maximum number of distinct values of each
-attribute that we will calculate the dependence for, `max_datapoints` specifies
-the number of datapoints that we use to average the effect of the attribute.
-The PDP test will calculate the dependence values for all attributes in the
+Here, `max_datapoints` specifies the number of datapoints that we use to average the effect of
+the attribute. The PDP test will calculate the dependence values for all attributes in the
 dataset that have a `x` role. You can restrict the attributes for which you
 want to calculate the dependence by specifying a list of attribute columns
 that you're interested in using the `columns` parameter.
