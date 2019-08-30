@@ -13,11 +13,15 @@ from algoneer.result import DatapointModelResult, ModelResult
 
 
 class SHAPDatapointResult(DatapointModelResult):
-    pass
+    @property
+    def name(self):
+        return "shap"
 
 
 class SHAPModelResult(ModelResult):
-    pass
+    @property
+    def name(self):
+        return "shap"
 
 
 class SHAP(ModelTest):

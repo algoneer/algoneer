@@ -16,7 +16,9 @@ import logging
 
 
 class ALEResult(ModelResult):
-    pass
+    @property
+    def name(self):
+        return "ale"
 
 
 class ALE(ModelTest):

@@ -12,11 +12,15 @@ from algoneer.result import ModelResult, DatapointModelResult
 
 
 class PredictionsDatapointResult(DatapointModelResult):
-    pass
+    @property
+    def name(self):
+        return "predictions"
 
 
 class PredictionsResult(ModelResult):
-    pass
+    @property
+    def name(self):
+        return "predictions"
 
 
 class Predictions(ModelTest):

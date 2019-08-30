@@ -16,7 +16,9 @@ import logging
 
 
 class PDPResult(ModelResult):
-    pass
+    @property
+    def name(self):
+        return "pdp"
 
 
 class PDP(ModelTest):
