@@ -124,12 +124,4 @@ Let's run it on our model:
     result = shap.run(model, ds, max_datapoints=100)
 
 Here, `max_datapoints` specifies the number of datapoints that we use to average the effect of
-the attribute. The PDP test will calculate the dependence values for all attributes in the
-dataset that have a `x` role. You can restrict the attributes for which you
-want to calculate the dependence by specifying a list of attribute columns
-that you're interested in using the `columns` parameter.
-
-Currently, the result that we obtain is a simple data structure that contains
-a list of tuples for each attribute, which contains the average predicted
-value for the different attribute values. We're working on a better presentation
-of these results, please bear with us.
+the attribute.
