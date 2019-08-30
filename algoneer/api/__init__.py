@@ -4,3 +4,4 @@ from .algorithm import APIAlgorithm  # noqa
 from .datapoint import APIDatapoint  # noqa
 from .dataset import APIDataset  # noqa
 from .model import APIModel  # noqa
+from .project import APIProject  # noqa

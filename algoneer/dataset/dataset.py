@@ -4,7 +4,7 @@ from .datapoint import Datapoint
 from .attribute import Attribute
 import abc
 
-from typing import Iterable, Mapping, Tuple, Union, Any, Iterator
+from typing import Iterable, Mapping, Tuple, Union, Any, Iterator, Optional
 
 
 class Dataset(abc.ABC):
@@ -12,24 +12,31 @@ class Dataset(abc.ABC):
     """Describes a collection of datapoints.
     """
 
-    def __init__(self, schema: DataSchema) -> None:
+    def __init__(self, schema: DataSchema, name: str = "unnamed dataset") -> None:
         self._schema = schema
+        self._name = name
 
     @property
     def roles(self):
         return Roles(self)
 
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @abc.abstractproperty
+    def hash(self) -> Optional[bytes]:
+        pass
+
     @abc.abstractmethod
     def datapoint(self, index: Any) -> Datapoint:
         pass
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def columns(self) -> Iterable[str]:
         pass
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def attributes(self) -> Mapping[str, Attribute]:
         pass
 
@@ -73,8 +80,7 @@ class Dataset(abc.ABC):
     def copy(self) -> "Dataset":
         pass
 
-    @property
-    @abc.abstractmethod
+    @abc.abstractproperty
     def shape(self) -> Tuple:
         pass
 

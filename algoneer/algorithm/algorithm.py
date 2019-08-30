@@ -4,7 +4,7 @@ import algoneer.model
 from algoneer.dataset import Dataset
 from algoneer.algorithmschema import AlgorithmSchema
 
-from typing import Optional
+from typing import Optional, Dict, Any
 
 
 class Algorithm(abc.ABC):
@@ -18,6 +18,15 @@ class Algorithm(abc.ABC):
                 return True
             return False
         return super().__getattr__(attr)
+
+    @abc.abstractproperty
+    def name(self) -> str:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def data(self) -> Dict[str, Any]:
+        pass
 
     @property
     def schema(self) -> AlgorithmSchema:

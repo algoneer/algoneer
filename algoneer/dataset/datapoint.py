@@ -1,7 +1,7 @@
 import algoneer
 import abc
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class Datapoint(abc.ABC):
@@ -16,6 +16,10 @@ class Datapoint(abc.ABC):
 
     @abc.abstractmethod
     def copy(self) -> "Datapoint":
+        pass
+
+    @abc.abstractproperty
+    def hash(self) -> Optional[bytes]:
         pass
 
     @property

@@ -12,7 +12,7 @@ format:
 
 mypy:
 	venv/bin/mypy algoneer/
-
+	venv/bin/mypy algoneer_tests/
 test:
 	venv/bin/py.test algoneer_tests ${TESTARGS}
 

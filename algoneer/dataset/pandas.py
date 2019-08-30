@@ -21,6 +21,7 @@ from .dataset import Dataset
 from .roles import Roles
 from .attribute import Attribute
 from .datapoint import Datapoint
+from algoneer.utils.hashing import get_hash
 from algoneer.dataschema import DataSchema, AttributeSchema
 
 
@@ -95,7 +96,13 @@ class PandasDatapoint(Datapoint):
 
     @property
     def data(self) -> Dict[str, Any]:
-        return self._dataset.df.iloc[self._index].to_dict()
+        return self._dataset.df.iloc[self._index : self._index + 1].to_dict(
+            orient="rows"
+        )[0]
+
+    @property
+    def hash(self) -> Optional[bytes]:
+        return get_hash(self.data)
 
     def copy(self) -> "PandasDatapoint":
         return PandasDatapoint(self._dataset, self._index)
@@ -191,6 +198,14 @@ class PandasDataset(Dataset):
 
     def datapoint(self, index: Any) -> PandasDatapoint:
         return PandasDatapoint(self, index)
+
+    @property
+    def hash(self) -> Optional[bytes]:
+        hashes = []
+        for record in self._df.to_dict(orient="records"):
+            hashes.append(get_hash(record))
+        hashes = sorted(hashes)
+        return get_hash(hashes)
 
     @property
     def df(self) -> pd.DataFrame:

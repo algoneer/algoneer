@@ -1,6 +1,7 @@
 from .algorithm import Algorithm
 
 import sklearn
+import platform
 
 from algoneer.algorithmschema import AlgorithmSchema
 from algoneer.dataset.pandas import PandasDataset
@@ -9,7 +10,7 @@ from algoneer.dataset import Dataset
 from algoneer.model.sklearn import SklearnModel
 from algoneer.model import Model
 
-from typing import Optional, Mapping, Any, Type
+from typing import Optional, Mapping, Any, Type, Dict
 
 
 class SklearnAlgorithm(Algorithm):
@@ -19,7 +20,10 @@ class SklearnAlgorithm(Algorithm):
             kwargs = {}
 
         self._estimator_class = estimator_class
-        self._kwargs = kwargs
+        self._kwargs = kwargs.copy()
+
+        if not "random_state" in self._kwargs:
+            self._kwargs["random_state"] = 0
 
         if issubclass(estimator_class, sklearn.base.ClassifierMixin):
             schema = AlgorithmSchema(type=AlgorithmSchema.Type.Classifier)
@@ -29,6 +33,21 @@ class SklearnAlgorithm(Algorithm):
             schema = AlgorithmSchema(type=AlgorithmSchema.Type.Cluster)
 
         super().__init__(schema=schema)
+
+    @property
+    def name(self) -> str:
+        return self._estimator_class.__name__
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return {
+            "kwargs": self._kwargs,
+            "version": sklearn.__version__,
+            "platform": {
+                "machine": platform.machine(),
+                "python": platform.python_version(),
+            },
+        }
 
     def fit(self, dataset: Dataset) -> Model:
         """
@@ -50,8 +69,15 @@ class SklearnAlgorithm(Algorithm):
         # we convert the dataset to an attribute
         y = y[y.columns[0]]
 
-        # we create a new estimator with the given arguments
-        estimator = self._estimator_class(**self._kwargs)
+        kwargs = self._kwargs.copy()
+
+        try:
+            # we create a new estimator with the given arguments
+            estimator = self._estimator_class(**kwargs)
+        except:
+            # we delete the random_state argument, as it might not be supported by all estimators
+            del kwargs["random_state"]
+            estimator = self._estimator_class(**kwargs)
 
         # we fit the estimator with the x and y dataframes
         estimator.fit(x.df, y.series)

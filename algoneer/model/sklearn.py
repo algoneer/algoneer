@@ -2,12 +2,14 @@ from .model import Model
 
 import pandas as pd
 import sklearn
+import pickle
+import zlib
 
 from algoneer.dataset.pandas import PandasDataset
 from algoneer.dataset import Dataset
 from algoneer.algorithm import Algorithm
 
-from typing import Any, Union
+from typing import Dict, Any, Union
 
 
 class SklearnModel(Model):
@@ -22,6 +24,10 @@ class SklearnModel(Model):
         dataset. This is useful for interoperability with 
         """
         return self._estimator.predict(dataset)
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return {"pickle": zlib.compress(pickle.dumps(self._estimator))}
 
     def predict(self, dataset: Union[Dataset, Any]) -> Dataset:
 
