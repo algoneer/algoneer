@@ -44,8 +44,18 @@ class SHAP(ModelTest):
         dp_results = []
         for i, shap_value in enumerate(shap_values):
             dp_results.append(
-                SHAPDatapointResult(shap_value, dataset.datapoint(i), model)
+                SHAPDatapointResult(
+                    {"shap_value": shap_value, "columns": dataset.roles.x.columns},
+                    dataset.datapoint(i),
+                    model,
+                )
             )
         return SHAPModelResult(
-            {"expected_value": ex, "shap_values": shap_values}, model, dp_results
+            {
+                "expected_value": ex,
+                "shap_values": shap_values,
+                "columns": dataset.roles.x.columns,
+            },
+            model,
+            dp_results,
         )
