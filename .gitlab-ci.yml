@@ -24,6 +24,7 @@ deploy:
 docs:
   stage: deploy
   only:
+    - master
     - /^v\d+\.\d+\.\d+$/
   before_script:
     - apt-get update -qy

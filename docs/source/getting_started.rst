@@ -43,6 +43,8 @@ dataset and running a test on it.
     You can find the whole
     example code `on GitHub <https://github.com/algoneer/algoneer/tree/master/examples/bike-sharing>`_.
 
+.. code-block:: python
+
     from algoneer.dataschema import DataSchema, AttributeSchema as AS
 
     # we define the data schema for the bike dataset, which helps Algoneer to automatically
