@@ -2,24 +2,28 @@ from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 from algoneer.methods.blackbox.pdp import PDP, PDPResult
 
-def test_pdp():
+import unittest
 
-    # we load the dataset
-    dataset = load_dataset()
-    
-    # we select an algorithm from the set of algorithms
-    algo = get_algorithm('linear-regression')
+class TestPDP(unittest.TestCase):
 
-    # we train the algorithm with the dataset to obtain a model
-    model = algo.fit(dataset)
+    def test_pdp(self):
 
-    # we initialize a PDP test
-    pdp = PDP()
+        # we load the dataset
+        dataset = load_dataset()
+        
+        # we select an algorithm from the set of algorithms
+        algo = get_algorithm('linear-regression')
 
-    columns = ['windspeed', 'hum', 'atemp', 'season']
+        # we train the algorithm with the dataset to obtain a model
+        model = algo.fit(dataset)
 
-    # we run the PDP test on the model and dataset
-    result = pdp.run(model, dataset, columns=columns, max_datapoints=110, max_values=5)
+        # we initialize a PDP test
+        pdp = PDP()
 
-    # we make sure that we obtain a reasonable result
-    assert isinstance(result, PDPResult)
+        columns = ['windspeed', 'hum', 'atemp', 'season']
+
+        # we run the PDP test on the model and dataset
+        result = pdp.run(model, dataset, columns=columns, max_datapoints=110, max_values=5)
+
+        # we make sure that we obtain a reasonable result
+        assert isinstance(result, PDPResult)

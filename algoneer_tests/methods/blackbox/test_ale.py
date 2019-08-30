@@ -2,24 +2,28 @@ from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 from algoneer.methods.blackbox.ale import ALE, ALEResult
 
-def test_ale():
+import unittest
 
-    # we load the dataset
-    dataset = load_dataset()
-    
-    # we select an algorithm from the set of algorithms
-    algo = get_algorithm('linear-regression')
+class TestALE(unittest.TestCase):
 
-    # we train the algorithm with the dataset to obtain a model
-    model = algo.fit(dataset)
+    def test_ale(self):
 
-    # we initialize a ALE test
-    ale = ALE()
+        # we load the dataset
+        dataset = load_dataset()
+        
+        # we select an algorithm from the set of algorithms
+        algo = get_algorithm('linear-regression')
 
-    columns = ['windspeed', 'hum', 'atemp', 'season']
+        # we train the algorithm with the dataset to obtain a model
+        model = algo.fit(dataset)
 
-    # we run the ALE test on the model and dataset
-    result = ale.run(model, dataset, columns=columns, max_datapoints=200, n_intervals=10)
+        # we initialize a ALE test
+        ale = ALE()
 
-    # we make sure that we obtain a reasonable result
-    assert isinstance(result, ALEResult)
+        columns = ['windspeed', 'hum', 'atemp', 'season']
+
+        # we run the ALE test on the model and dataset
+        result = ale.run(model, dataset, columns=columns, max_datapoints=200, n_intervals=10)
+
+        # we make sure that we obtain a reasonable result
+        assert isinstance(result, ALEResult)

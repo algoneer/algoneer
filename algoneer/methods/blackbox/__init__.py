@@ -1,5 +1,6 @@
 import logging
 
+from algoneer.utils import CI
 from algoneer.modeltest import ModelTest
 
 from typing import List, Type
@@ -12,12 +13,9 @@ model_tests: List[Type[ModelTest]] = [ALE, PDP, Predictions]
 
 logger = logging.getLogger(__name__)
 
-# These are optional tests that require additional dependencies, Algoneer works without them as
-# well though
-try:
+# Only raises an exception if the "shap" module is available, otherwise silently discards
+# the import with a log message that the module is not available...
+with CI("shap"):
     from .shap import SHAP
-except ImportError:
-    logger.debug("Importing SHAP test failed, skipping...")
-    pass
 
-model_tests.append(SHAP)
+    model_tests.append(SHAP)

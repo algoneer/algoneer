@@ -3,22 +3,26 @@ from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 from algoneer.methods.blackbox.predictions import Predictions, PredictionsResult
 from algoneer.result import Result
 
-def test_predictions():
+import unittest
 
-    # we load the dataset
-    dataset = load_dataset()
-    
-    # we select an algorithm from the set of algorithms
-    algo = get_algorithm('random-forest')
+class TestPredictions(unittest.TestCase):
 
-    # we train the algorithm with the dataset to obtain a model
-    model = algo.fit(dataset)
+    def test_predictions(self):
 
-    # we initialize a predictions test
-    predictions = Predictions()
+        # we load the dataset
+        dataset = load_dataset()
+        
+        # we select an algorithm from the set of algorithms
+        algo = get_algorithm('random-forest')
 
-    # we run the predictions test on the model and dataset
-    result = predictions.run(model, dataset, max_datapoints=110)
+        # we train the algorithm with the dataset to obtain a model
+        model = algo.fit(dataset)
 
-    # we make sure that we obtain a reasonable result
-    assert isinstance(result, Result)
+        # we initialize a predictions test
+        predictions = Predictions()
+
+        # we run the predictions test on the model and dataset
+        result = predictions.run(model, dataset, max_datapoints=110)
+
+        # we make sure that we obtain a reasonable result
+        assert isinstance(result, Result)
