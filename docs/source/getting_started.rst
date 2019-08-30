@@ -6,40 +6,42 @@ Getting Started
    This is a work-in-progress that shows how the pre-alpha version of Algoneer
    works. Please let us know if you should encounter any problems.
 
-Algoneer helps you to better understand your datasets and machine learning
-models and test them for potential problems. Algoneer aims to be simple to use.
-
 Algoneer provides blackbox tests that work on :class:`~algoneer.model.Model`
 objects. A Model is an :class:`~algoneer.algorithm.Algorithm` that has been
 trained with a specific :class:`~algoneer.dataset.DataSet`.
 
-To get started we need to install Algoneer, which we can do using pip:
+To get started we need to install Algoneer.
+
+.. note::
+
+    You need Python version >=3.6 to run Algoneer.
 
 .. code-block:: bash
 
-    pip install algoneer
+    pip3 install algoneer
 
 Algoneer aims to be technology-agnostic and provides wrappers for the most
 popular data processing and machine learning libraries. In this tutorial, we
-are going to use Algoneer in conjunction with `pandas` and `scikit-learn`,
-which we need to install manually.
+are going to use Algoneer in conjunction with `pandas` and `scikit-learn`. In 
+case you have not installed them already, you can do so by running:
 
 .. code-block:: bash
 
-    pip install pandas scikit-learn
+    pip3 install pandas scikit-learn
 
 Algoneer also provides a separate package with several example datasets that
 make it easy to get started. We can also install them using pip:
 
 .. code-block:: bash
 
-    pip install algoneer_datasets
+    pip3 install algoneer_datasets
 
 That's it, we're good to go! Let's start using Algoneer by loading an example
-dataset and running a test on it. You can find a Jupyter notebook with the
-example code `online <https://github.com/algoneer/algoneer/blob/master/examples/bike-sharing/partial-dependence-plot.ipynb>`_
-or in the `examples/bike-sharing/partial-dependence-plot.ipynb` file of the
-repository (for the visualization you will need `matplotlib` installed).
+dataset and running a test on it. 
+
+.. note::
+    You can find the whole
+    example code `on GitHub <https://github.com/algoneer/algoneer/tree/master/examples/bike-sharing>`_.
 
 .. code-block:: python
 
