@@ -1,5 +1,5 @@
 from .object import Object
 
 
-class DatasetResult(Object):
+class AlgorithmSchema(Object):
     pass

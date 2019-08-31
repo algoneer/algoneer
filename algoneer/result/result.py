@@ -1,10 +1,13 @@
 from typing import Any
 
+from algoneer.object import Object
+
 import abc
 
 
-class Result(abc.ABC):
+class Result(Object, abc.ABC):
     def __init__(self, data: Any):
+        super().__init__()
         self._data = data
 
     @abc.abstractproperty

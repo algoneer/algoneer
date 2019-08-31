@@ -1,6 +1,5 @@
 from typing import Optional, Callable, Dict, Any
 from .object import Object
-from .session import Session
 from .base_client import BaseClient
 from .response import Response
 import requests
