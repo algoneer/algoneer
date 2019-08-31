@@ -2,13 +2,16 @@ from typing import List, Optional
 from .base_client import BaseClient
 from algoneer.object import Object
 
+from typing import Dict
+
+
 class Session:
     def __init__(
         self, client: BaseClient, exclude_classes: Optional[List[str]] = ["datapoint"]
     ):
         self._client = client
         self._exclude_classes = exclude_classes
-        self._objects = {}
+        self._objects: Dict[int, Object] = {}
 
     def add(self, object: Object) -> None:
         self._objects[id(object)] = object
