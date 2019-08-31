@@ -62,6 +62,12 @@ class Session:
     def sync(self) -> None:
         """
         Synchronizes all objects present in the session with the backend.
+
+        * Sort all session objects by their dependencies.
+        * For each object, retrieve the backend URL for storing it.
+        * Call the API to create or update the object and retrieve its ID.
+        * Store the ID and data in the API object class.
+        * Done :)
         """
         pass
 

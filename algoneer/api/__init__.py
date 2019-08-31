@@ -7,3 +7,7 @@ from .model import Model  # noqa
 from .project import Project  # noqa
 from .client import Client  # noqa
 from .response import Response  # noqa
+from .algorithm_result import AlgorithmResult  # noqa
+from .dataset_result import DatasetResult  # noqa
+from .model_result import ModelResult  # noqa
+from .datapoint_model_result import DatapointModelResult  # noqa

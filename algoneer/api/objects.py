@@ -19,7 +19,7 @@ class Objects(abc.ABC, Generic[T]):
 
     def list(self, **kwargs) -> List[T]:
         """
-        List 
+        List all objects of a given type.
         """
         return []
 
