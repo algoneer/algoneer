@@ -1,14 +1,14 @@
 from typing import Type, List, TypeVar, Generic
-from .object import APIObject
+from .object import Object
 from .client import Client
 import abc
 
 from typing import TypeVar, Generic
 
-T = TypeVar("T", bound=APIObject)
+T = TypeVar("T", bound=Object)
 
 
-class APIObjects(abc.ABC, Generic[T]):
+class Objects(abc.ABC, Generic[T]):
 
     Type: Type[T]
     list_url: str

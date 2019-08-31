@@ -1,10 +1,11 @@
 import algoneer
 import abc
 
+from algoneer.object import Object
 from typing import Dict, Any, Optional
 
 
-class Datapoint(abc.ABC):
+class Datapoint(Object, abc.ABC):
 
     """Describes a single datapoint.
     """

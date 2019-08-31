@@ -1,4 +1,5 @@
 from algoneer.dataschema import DataSchema
+from algoneer.object import Object
 from .roles import Roles
 from .datapoint import Datapoint
 from .attribute import Attribute
@@ -7,12 +8,13 @@ import abc
 from typing import Iterable, Mapping, Tuple, Union, Any, Iterator, Optional
 
 
-class Dataset(abc.ABC):
+class Dataset(Object, abc.ABC):
 
     """Describes a collection of datapoints.
     """
 
     def __init__(self, schema: DataSchema, name: str = "unnamed dataset") -> None:
+        super().__init__()
         self._schema = schema
         self._name = name
 

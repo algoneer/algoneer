@@ -1,4 +1,5 @@
 from typing import Mapping, Any, Optional, Set
+from algoneer.object import Object
 from collections import OrderedDict
 from .attributeschema import AttributeSchema
 import algoneer.dataset
@@ -14,12 +15,13 @@ class DataSchemaMeta(type):
         super().__init__(name, bases, namespace)
 
 
-class DataSchema(metaclass=DataSchemaMeta):
+class DataSchema(Object, metaclass=DataSchemaMeta):
     def __init__(
         self,
         schema: Optional[Mapping[str, Any]] = None,
         attributes: "Optional[OrderedDict[str, AttributeSchema]]" = None,
     ):
+        super().__init__()
         if schema is not None:
             self._attributes = parse_attributes(self, schema)
         else:

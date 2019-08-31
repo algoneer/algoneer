@@ -1,5 +1,6 @@
 import abc
 
+from algoneer.object import Object
 from algoneer.utils.hashing import get_hash
 from algoneer.dataset import Dataset, Attribute
 from algoneer.result import Result, ResultCollection
@@ -8,8 +9,9 @@ from algoneer.algorithm import Algorithm
 from typing import Union, Dict, Iterable, Dict, Any
 
 
-class Model(abc.ABC):
+class Model(Object, abc.ABC):
     def __init__(self, algorithm: Algorithm) -> None:
+        super().__init__()
         self._algorithm = algorithm
 
     def test(self, dataset: Dataset) -> ResultCollection:

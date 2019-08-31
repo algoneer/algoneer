@@ -1,5 +1,5 @@
-from .object import APIObject
+from .object import Object
 
 
-class APIProject(APIObject):
+class Project(Object):
     pass

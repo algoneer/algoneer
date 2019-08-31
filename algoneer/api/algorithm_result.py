@@ -1,5 +1,5 @@
-from .object import APIObject
+from .object import Object
 
 
-class APIAlgorithmResult(APIObject):
+class AlgorithmResult(Object):
     pass

@@ -3,7 +3,7 @@ from typing import Dict, Any, Optional
 import abc
 
 
-class APIObject(abc.ABC):
+class Object(abc.ABC):
     """
     All API objects inherit from this class.
     """

@@ -1,10 +1,10 @@
-from .object import APIObject
-from .objects import APIObjects
+from .object import Object
+from .objects import Objects
 
 
-class APIDatapointModelResult(APIObject):
+class DatapointModelResult(Object):
     pass
 
 
-class APIDatapointModelResults(APIObjects[APIDatapointModelResult]):
-    Type = APIDatapointModelResult
+class DatapointModelResults(Objects[DatapointModelResult]):
+    Type = DatapointModelResult

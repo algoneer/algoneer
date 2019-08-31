@@ -1,12 +1,12 @@
-from .object import APIObject
-from algoneer.result import Result, ResultCollection
+from .object import Object
+from algoneer.result import Result as AResult, ResultCollection as AResultCollection
 
 
-class APIResult(APIObject):
-    def __init__(self, result: Result) -> None:
+class Result(Object):
+    def __init__(self, result: AResult) -> None:
         self._result = result
 
 
-class APIResultCollection(APIObject):
-    def __init__(self, collection: ResultCollection) -> None:
+class ResultCollection(Object):
+    def __init__(self, collection: AResultCollection) -> None:
         self._collection = collection

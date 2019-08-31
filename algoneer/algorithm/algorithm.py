@@ -1,14 +1,16 @@
 import abc
 
 import algoneer.model
+from algoneer.object import Object
 from algoneer.dataset import Dataset
 from algoneer.algorithmschema import AlgorithmSchema
 
 from typing import Optional, Dict, Any
 
 
-class Algorithm(abc.ABC):
+class Algorithm(Object, abc.ABC):
     def __init__(self, schema: AlgorithmSchema) -> None:
+        super().__init__()
         self._schema = schema
 
     def __getattr__(self, attr):
