@@ -7,9 +7,12 @@ class Result(abc.ABC):
     def __init__(self, data: Any):
         self._data = data
 
-    @property
     @abc.abstractproperty
     def name(self) -> str:
+        pass
+
+    @abc.abstractproperty
+    def version(self) -> str:
         pass
 
     @property

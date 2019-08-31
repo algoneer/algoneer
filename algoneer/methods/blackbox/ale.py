@@ -20,6 +20,10 @@ class ALEResult(ModelResult):
     def name(self):
         return "ale"
 
+    @property
+    def version(self):
+        return "1.0.0"
+
 
 class ALE(ModelTest):
 

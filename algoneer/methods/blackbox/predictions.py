@@ -14,13 +14,21 @@ from algoneer.result import ModelResult, DatapointModelResult
 class PredictionsDatapointResult(DatapointModelResult):
     @property
     def name(self):
-        return "predictions"
+        return "predictions.datapoint"
+
+    @property
+    def version(self):
+        return "1.0.0"
 
 
 class PredictionsResult(ModelResult):
     @property
     def name(self):
-        return "predictions"
+        return "predictions.model"
+
+    @property
+    def version(self):
+        return "1.0.0"
 
 
 class Predictions(ModelTest):

@@ -15,13 +15,21 @@ from algoneer.result import DatapointModelResult, ModelResult
 class SHAPDatapointResult(DatapointModelResult):
     @property
     def name(self):
-        return "shap"
+        return "shap.datapoint"
+
+    @property
+    def version(self):
+        return "1.0.0"
 
 
 class SHAPModelResult(ModelResult):
     @property
     def name(self):
-        return "shap"
+        return "shap.model"
+
+    @property
+    def version(self):
+        return "1.0.0"
 
 
 class SHAP(ModelTest):

@@ -20,6 +20,10 @@ class PDPResult(ModelResult):
     def name(self):
         return "pdp"
 
+    @property
+    def version(self):
+        return "1.0.0"
+
 
 class PDP(ModelTest):
 
