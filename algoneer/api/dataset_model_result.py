@@ -1,5 +1,5 @@
 from .object import Object
-from .objects import Objects
+from .manager import Manager
 from algoneer.result import DatasetModelResult as ADatasetModelResult
 
 
@@ -7,5 +7,5 @@ class DatasetModelResult(Object):
     Type = ADatasetModelResult
 
 
-class DatasetModelResults(Objects[DatasetModelResult]):
+class DatasetModelResults(Manager[DatasetModelResult]):
     Type = DatasetModelResult

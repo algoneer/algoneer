@@ -1,6 +1,7 @@
 from typing import List, Optional, Dict, Type
 from .base_client import BaseClient
 from .object import Object as Object, get_class_for
+from .manager import Manager, get_manager_for
 from algoneer.object import Object as AObject
 
 
@@ -19,7 +20,7 @@ class Session:
 
     def add(self, obj: AObject) -> Object:
         """
-        Adds a given object to the session and returns the corresponding API
+        Adds a given object to the} session and returns the corresponding API
         oject.
         """
         MappedClass = get_class_for(type(obj))
@@ -36,7 +37,24 @@ class Session:
     def sync(self) -> None:
         """
         Synchronizes all objs present in the session with the backend.
+        
+        * For each object in the session:
+          * Get dependent objects and insert them before the object
+          * Save the object using its query manager (which extracts the relevant
+            data and the ID and queries the API)
         """
+        managers: Dict[Type[Object], Manager] = {}
+        for obj in self._obj_map.values():
+            if not type(obj) in managers:
+                ManagerClass = get_manager_for(type(obj))
+                if ManagerClass is None:
+                    raise ValueError(
+                        "no manager class defined for type {}".format(
+                            type(obj).__name__
+                        )
+                    )
+                managers[type(obj)] = ManagerClass(self)
+            manager = managers[type(obj)]
         pass
 
     def __contains__(self, obj: AObject) -> bool:

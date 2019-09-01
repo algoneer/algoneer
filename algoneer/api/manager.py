@@ -1,39 +1,50 @@
 from typing import Type, List, TypeVar, Generic
 from .object import Object
-from .session import Session
-import abc
+import algoneer.api
 
 from typing import TypeVar, Generic, Dict, Any, Optional
 
 T = TypeVar("T", bound=Object)
 
 
-class Objects(abc.ABC, Generic[T]):
+class ManagerMeta(type):
+    def __init__(cls, name: str, bases, namespace) -> None:
+        """
+        We add the mapped class to the mappings dictionary, which allows the
+        session to determine the correct API object for a given Algoneer object.
+        """
+        if hasattr(cls, "Type"):
+            mappings[cls.Type] = cls  # type: ignore
+        super().__init__(name, bases, namespace)
+
+
+class Manager(Generic[T], metaclass=ManagerMeta):
 
     Type: Type[T]
+    url: str = ""
 
-    @abc.abstractmethod
     def object_url(self, id: str) -> str:
         """
         Returns the URL for a specific object
         """
+        return self.url.format(id=id)
 
-    @abc.abstractmethod
     def list_url(self) -> str:
         """
         Returns the URL to list objects
         """
+        return self.url
 
-    @abc.abstractmethod
     def create_url(self) -> str:
         """
         Returns the URL to create an object
         """
+        return self.url
 
     def create_obj(self, data: Dict[str, Any]) -> T:
         return self.Type(data=data, session=self.session)
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: "algoneer.api.Session") -> None:
         self.session = session
 
     def list(self, params: Optional[Dict[str, Any]] = None) -> List[T]:
@@ -59,9 +70,14 @@ class Objects(abc.ABC, Generic[T]):
         if response.status_code != 200:
             raise IOError
         assert response.data is not None
-        return self.Type(response.data)
+        return self.create_obj(response.data)
 
-    def create(self, obj: T) -> bool:
+    def save(self, obj: T) -> bool:
+        if obj.id is not None:
+            return self._update(obj)
+        return self._create(obj)
+
+    def _create(self, obj: T) -> bool:
         """
         Create a new object.
         """
@@ -73,7 +89,7 @@ class Objects(abc.ABC, Generic[T]):
         obj.data = response.data
         return True
 
-    def update(self, obj: T) -> bool:
+    def _update(self, obj: T) -> bool:
         """
         Update an existing object.
         """
@@ -97,3 +113,13 @@ class Objects(abc.ABC, Generic[T]):
             raise IOError
         obj.id = None
         return True
+
+
+mappings: Dict[Type[Object], Type[Manager]] = {}
+
+
+def get_manager_for(cls: Type[Object]) -> Optional[Type[Manager]]:
+    for potential_cls in [cls] + list(cls.__bases__):
+        if potential_cls in mappings:
+            return mappings[potential_cls]
+    return None

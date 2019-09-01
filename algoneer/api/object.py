@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional, TypeVar, Generic, Type
+from typing import Dict, Any, Optional, TypeVar, Generic, Type, List
 
 from algoneer import Object as AObject
 import algoneer.api
@@ -34,6 +34,13 @@ class Object(Generic[T], metaclass=ObjectMeta):
         self._obj = obj
         self._data = data
         self._session = session
+
+    @property
+    def dependent_objs(self) -> List[T]:
+        """
+        Returns a list of dependent objects.
+        """
+        return []
 
     @property
     def obj(self) -> Optional[T]:
