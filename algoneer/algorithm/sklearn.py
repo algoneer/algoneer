@@ -82,4 +82,4 @@ class SklearnAlgorithm(Algorithm):
         # we fit the estimator with the x and y dataframes
         estimator.fit(x.df, y.series)
 
-        return SklearnModel(self, estimator)
+        return SklearnModel(self, dataset, estimator)

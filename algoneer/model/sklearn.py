@@ -9,12 +9,17 @@ from algoneer.dataset.pandas import PandasDataset
 from algoneer.dataset import Dataset
 from algoneer.algorithm import Algorithm
 
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 
 
 class SklearnModel(Model):
-    def __init__(self, algorithm: Algorithm, estimator: sklearn.base.BaseEstimator):
-        super().__init__(algorithm=algorithm)
+    def __init__(
+        self,
+        algorithm: Algorithm,
+        dataset: Optional[Dataset],
+        estimator: sklearn.base.BaseEstimator,
+    ):
+        super().__init__(algorithm=algorithm, dataset=dataset)
         self._estimator = estimator
 
     def _predict_raw(self, dataset: Any) -> Any:

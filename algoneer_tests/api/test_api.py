@@ -5,10 +5,9 @@ from algoneer.api import Session, Response, Object as APIObject
 from algoneer.api.base_client import BaseClient
 from algoneer.object import Object
 from algoneer.api.object import mappings
-
-print(mappings)
-
 from algoneer.model import Model
+
+import unittest
 
 class Client(BaseClient):
 
@@ -23,9 +22,6 @@ class Client(BaseClient):
 
     def delete(self, url: str, **kwargs) -> Response:
         return Response(200, {})
-
-
-import unittest
 
 class ApiTest(unittest.TestCase):
 
