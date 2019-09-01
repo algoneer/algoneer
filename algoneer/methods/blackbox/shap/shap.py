@@ -1,15 +1,10 @@
-"""
-algoneer.methods.blackbox.pdp
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This modules implements the generation of partial dependence plots for machine
-learning models.
-"""
-
 import shap
 from typing import Iterable, Tuple, Optional
 from algoneer import Dataset, Model, DatasetModelTest, Attribute, Datapoint
 from algoneer.result import DatapointModelResult, DatasetModelResult, Result
+from .force import force_plot
+
+import numpy as np
 
 
 class SHAPDatapointResult(Result):
@@ -63,6 +58,7 @@ class SHAP(DatasetModelTest):
                     ),
                 )
             )
+        plot_data = force_plot(np.array([ex]), shap_values, dataset.roles.x.df)
         return DatasetModelResult(
             dataset,
             model,
@@ -71,6 +67,7 @@ class SHAP(DatasetModelTest):
                     "expected_value": float(ex),
                     "shap_values": shap_values.tolist(),
                     "columns": list(dataset.roles.x.columns),
+                    "plot_data": plot_data,
                 }
             ),
             dp_results,
