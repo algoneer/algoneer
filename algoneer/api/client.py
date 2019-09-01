@@ -9,7 +9,7 @@ class Client(BaseClient):
     def __init__(
         self,
         access_token: str,
-        base_url: Optional[str] = "https://api.algoneer.org",
+        base_url: Optional[str] = "http://localhost:5001",
         version: Optional[str] = "v1",
     ) -> None:
         self._access_token = access_token

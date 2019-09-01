@@ -9,13 +9,12 @@ from typing import Dict, Any, Optional, List
 class Project(Object):
     Type = AProject
 
-    @property
-    def dependencies(self) -> List[AObject]:
-        return []
-
 
 class Projects(Manager[Project]):
     Type = Project
 
-    def url(self, obj: Optional[Project]) -> str:
-        return ""
+    def url(self, obj: Project) -> str:
+        if obj.id is not None:
+            return "/projects/{}".format(obj.id)
+        else:
+            return "/organizations/default/project"

@@ -26,33 +26,30 @@ class Object(Generic[T], metaclass=ObjectMeta):
 
     Type: Type[T]
 
-    def __init__(self, obj: T, session: Optional["algoneer.api.Session"] = None):
-        self._obj = obj
+    def __init__(self, mapped_obj: T, session: Optional["algoneer.api.Session"] = None):
+        self._mapped_obj = mapped_obj
         self._api_data: Optional[Dict[str, Any]] = None
         self._session = session
 
     @property
-    def dependent_objs(self) -> List[T]:
-        """
-        Returns a list of dependent objects.
-        """
-        return []
-
-    @property
-    def obj(self) -> T:
-        return self._obj
+    def mapped_obj(self) -> T:
+        return self._mapped_obj
 
     @property
     def session(self) -> Optional["algoneer.api.Session"]:
         return self._session
 
-    @abc.abstractproperty
+    @property
     def dependencies(self) -> List[AObject]:
-        pass
+        return []
+
+    @property
+    def dependants(self) -> List[AObject]:
+        return []
 
     @property
     def data(self) -> Dict[str, Any]:
-        return self.obj.dump()
+        return self.mapped_obj.dump()
 
     @property
     def api_data(self) -> Optional[Dict[str, Any]]:

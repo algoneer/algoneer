@@ -10,11 +10,11 @@ class DatapointModelResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.datapoint, self.obj.model]
+        return [self.mapped_obj.datapoint, self.mapped_obj.model]
 
 
 class DatapointModelResults(Manager[DatapointModelResult]):
     Type = DatapointModelResult
 
-    def url(self, obj: Optional[DatapointModelResult]) -> str:
+    def url(self, obj: DatapointModelResult) -> str:
         return ""

@@ -10,11 +10,11 @@ class Datapoint(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.dataset]
+        return [self.mapped_obj.dataset]
 
 
 class Datapoints(Manager[Datapoint]):
     Type = Datapoint
 
-    def url(self, obj: Optional[Datapoint]) -> str:
+    def url(self, obj: Datapoint) -> str:
         return ""

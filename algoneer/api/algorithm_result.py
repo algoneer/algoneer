@@ -10,11 +10,11 @@ class AlgorithmResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.algorithm]
+        return [self.mapped_obj.algorithm]
 
 
 class AlgorithmResults(Manager[AlgorithmResult]):
     Type = AlgorithmResult
 
-    def url(self, obj: Optional[AlgorithmResult]) -> str:
+    def url(self, obj: AlgorithmResult) -> str:
         return ""

@@ -19,6 +19,7 @@ class Dataset(Object, abc.ABC):
     ) -> None:
         super().__init__()
         self._schema = schema
+        self._dataschema = DatasetDataSchema(self, self.schema)
         self._project = project
         self._name = name
 
@@ -55,6 +56,10 @@ class Dataset(Object, abc.ABC):
     @abc.abstractproperty
     def attributes(self) -> Mapping[str, Attribute]:
         pass
+
+    @property
+    def dataschema(self) -> "DatasetDataSchema":
+        return self._dataschema
 
     @property
     def schema(self) -> DataSchema:
@@ -114,4 +119,16 @@ class Dataset(Object, abc.ABC):
 
     @abc.abstractmethod
     def order_by(self, columns: Iterable[str]) -> "Dataset":
+        pass
+
+
+class DatasetDataSchema(Object):
+    def __init__(self, dataset: Dataset, schema: DataSchema):
+        self.dataset = dataset
+        self.schema = schema
+
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
         pass

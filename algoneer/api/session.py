@@ -18,6 +18,17 @@ class Session:
     def client(self):
         return self._client
 
+    def get_saved(self, obj: AObject) -> Object:
+        aobj = self.get(obj, check_saved=True)
+        assert aobj is not None
+        return aobj
+
+    def get(self, obj: AObject, check_saved: bool = False) -> Optional[Object]:
+        aobj = self._obj_map.get(obj)
+        if check_saved and (not aobj or not aobj.id):
+            raise ValueError("object not in session or not saved")
+        return aobj
+
     def add(self, obj: AObject) -> Object:
         """
         Adds a given object to the} session and returns the corresponding API
@@ -30,7 +41,7 @@ class Session:
             raise ValueError(
                 "no mapping for object of type '{}'".format(type(obj).__name__)
             )
-        mapped_obj = MappedClass(obj=obj, session=self)
+        mapped_obj = MappedClass(mapped_obj=obj, session=self)
         self._inv_obj_map[mapped_obj] = obj
         self._obj_map[obj] = mapped_obj
         return mapped_obj
@@ -52,16 +63,19 @@ class Session:
         objs: Set[Object] = set()
 
         def add_obj(obj: Object):
-            dependencies = obj.dependencies
-            for dependency in dependencies:
+            for dependency in obj.dependencies:
                 dep = self.add(dependency)
                 add_obj(dep)
             if not obj in objs:
                 objs_to_add.append(obj)
                 objs.add(obj)
+            for dependant in obj.dependants:
+                dep = self.add(dependant)
+                add_obj(dep)
 
         for obj in list(self._obj_map.values()):
             add_obj(obj)
+
         for obj in objs_to_add:
             if not type(obj) in managers:
                 ManagerClass = get_manager_for(type(obj))

@@ -1,1 +1,1 @@
-from .algorithm import Algorithm
+from .algorithm import Algorithm, AlgorithmAlgorithmSchema

@@ -10,11 +10,11 @@ class ModelResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.model]
+        return [self.mapped_obj.model]
 
 
 class ModelResults(Manager[ModelResult]):
     Type = ModelResult
 
-    def url(self, obj: Optional[ModelResult]) -> str:
+    def url(self, obj: ModelResult) -> str:
         return ""

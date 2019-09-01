@@ -24,7 +24,7 @@ class Manager(Generic[T], metaclass=ManagerMeta):
     Type: Type[T]
 
     @abc.abstractmethod
-    def url(self, obj: Optional[T]) -> str:
+    def url(self, obj: T) -> str:
         """
         Returns the URL to create/update an object
         """
@@ -34,8 +34,6 @@ class Manager(Generic[T], metaclass=ManagerMeta):
         self.session = session
 
     def save(self, obj: T) -> bool:
-        print("Saving object of type {}...".format(type(obj).__name__))
-        print(obj.data)
         if obj.id is not None:
             return self._update(obj)
         return self._create(obj)
@@ -46,8 +44,8 @@ class Manager(Generic[T], metaclass=ManagerMeta):
         """
         url = self.url(obj)
         response = self.session.client.post(url, data=obj.data)
-        if response.status_code != 200:
-            raise IOError
+        if response.status_code != 201:
+            raise IOError()
         assert response.data is not None
         obj.api_data = response.data
         return True
@@ -60,7 +58,7 @@ class Manager(Generic[T], metaclass=ManagerMeta):
         url = self.url(obj)
         response = self.session.client.patch(url, data=obj.data)
         if response.status_code != 200:
-            raise IOError
+            raise IOError()
         assert response.data is not None
         obj.api_data = response.data
         return True

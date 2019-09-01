@@ -10,11 +10,11 @@ class DatasetResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.dataset]
+        return [self.mapped_obj.dataset]
 
 
 class DatasetResults(Manager[DatasetResult]):
     Type = DatasetResult
 
-    def url(self, obj: Optional[DatasetResult]) -> str:
+    def url(self, obj: DatasetResult) -> str:
         return ""
