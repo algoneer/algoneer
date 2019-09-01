@@ -66,7 +66,7 @@ class ApiTest(unittest.TestCase):
             test = Test()
 
             # we run the test on the model and dataset
-            result = test.run(dataset, model, max_datapoints=100, max_values=100)
+            result = test.run(dataset, model, max_datapoints=10, max_values=10)
             session.add(result)
 
         api_model = session.add(model)
