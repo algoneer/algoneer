@@ -1,6 +1,6 @@
 from enum import Enum
 
-from typing import Mapping, Any, Optional
+from typing import Mapping, Any, Optional, Dict
 from algoneer.object import Object
 
 
@@ -31,3 +31,9 @@ class AlgorithmSchema(Object):
     @property
     def type(self) -> Type:
         return self._type
+
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass

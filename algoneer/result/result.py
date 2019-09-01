@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 from algoneer.object import Object
 
@@ -9,6 +9,12 @@ class Result(Object, abc.ABC):
     def __init__(self, data: Any):
         super().__init__()
         self._data = data
+
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
 
     @abc.abstractproperty
     def name(self) -> str:

@@ -14,6 +14,12 @@ class Model(Object, abc.ABC):
         self._algorithm = algorithm
         self._dataset = dataset
 
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
+
     @abc.abstractproperty
     def data(self) -> Dict[str, Any]:
         pass

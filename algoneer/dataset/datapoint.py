@@ -10,6 +10,12 @@ class Datapoint(Object, abc.ABC):
     """Describes a single datapoint.
     """
 
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
+
     @property
     @abc.abstractmethod
     def dataset(self) -> "algoneer.Dataset":

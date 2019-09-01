@@ -5,6 +5,8 @@ from typing import Any, Dict, Optional, Iterable
 from .result import ResultProxy, Result
 from .datapoint_model_result import DatapointModelResult
 
+from typing import Dict, Any
+
 
 class DatasetModelResult(Object, ResultProxy):
 

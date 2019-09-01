@@ -6,7 +6,7 @@ from .datapoint import Datapoint
 from .attribute import Attribute
 import abc
 
-from typing import Iterable, Mapping, Tuple, Union, Any, Iterator, Optional
+from typing import Iterable, Mapping, Tuple, Union, Any, Iterator, Optional, Dict
 
 
 class Dataset(Object, abc.ABC):
@@ -21,6 +21,12 @@ class Dataset(Object, abc.ABC):
         self._schema = schema
         self._project = project
         self._name = name
+
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
 
     @property
     def project(self):

@@ -1,8 +1,9 @@
-from typing import Mapping, Any, Optional, Set
 from algoneer.object import Object
 from collections import OrderedDict
 from .attributeschema import AttributeSchema
 import algoneer.dataset
+
+from typing import Mapping, Any, Optional, Set, Dict
 
 
 class DataSchemaMeta(type):
@@ -51,6 +52,12 @@ class DataSchema(Object, metaclass=DataSchemaMeta):
                 continue
             new_attributes[key] = attribute.copy()
         return type(self)(attributes=new_attributes)
+
+    def dump(self) -> Dict[str, Any]:
+        return {}
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
 
 
 def parse_attributes(ds: DataSchema, schema: Mapping[str, Any]) -> Any:
