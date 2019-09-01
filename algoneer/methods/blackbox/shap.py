@@ -56,7 +56,10 @@ class SHAP(DatasetModelTest):
                     dataset.datapoint(i),
                     model,
                     SHAPDatapointResult(
-                        {"shap_value": shap_value.tolist(), "columns": dataset.roles.x.columns}
+                        {
+                            "shap_value": shap_value.tolist(),
+                            "columns": dataset.roles.x.columns,
+                        }
                     ),
                 )
             )

@@ -14,6 +14,8 @@ import unittest
 import uuid
 import os
 
+from typing import Union
+
 class TestClient(BaseClient):
 
     def get(self, url: str, **kwargs) -> Response:
@@ -50,6 +52,7 @@ class ApiTest(unittest.TestCase):
         assert isinstance(model, Object)
         assert isinstance(dataset, Object)
 
+        client : Union[Client, TestClient]
         token = os.environ.get("ALGONAUT_TOKEN")
         if token:
             client = Client(token)
