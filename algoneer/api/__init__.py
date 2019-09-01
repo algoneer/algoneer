@@ -11,3 +11,4 @@ from .algorithm_result import AlgorithmResult  # noqa
 from .dataset_result import DatasetResult  # noqa
 from .model_result import ModelResult  # noqa
 from .datapoint_model_result import DatapointModelResult  # noqa
+from .dataset_model_result import DatasetModelResult  # noqa

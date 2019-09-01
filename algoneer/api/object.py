@@ -11,7 +11,8 @@ T = TypeVar("T", bound=AObject)
 
 class Object(abc.ABC, Generic[T]):
     """
-    All API objects inherit from this class.
+    All API objects inherit from this class. Each API object maps to a given
+    Algoneer object.
     """
 
     Type: Type[T]
@@ -20,15 +21,15 @@ class Object(abc.ABC, Generic[T]):
         self,
         data: Dict[str, Any],
         session: Optional["algoneer.api.Session"] = None,
-        object: Optional[AObject] = None,
+        obj: Optional[T] = None,
     ):
-        self._object = object
+        self._obj = obj
         self._data = data
         self._session = session
 
     @property
-    def object(self) -> Optional[AObject]:
-        return self._object
+    def obj(self) -> Optional[T]:
+        return self._obj
 
     @property
     def session(self) -> Optional["algoneer.api.Session"]:
