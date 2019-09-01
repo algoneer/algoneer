@@ -29,9 +29,9 @@ class Session:
         self._inv_obj_map[mapped_obj] = obj
         self._obj_map[obj] = mapped_obj
         return mapped_obj
-    
-    def get_api_obj(self, obj: Object) -> Optional[AObject]:
-        pass
+
+    def __getitem__(self, obj: AObject) -> Optional[Object]:
+        return self._obj_map.get(obj)
 
     def sync(self) -> None:
         """
@@ -46,4 +46,4 @@ class Session:
         pass
 
     def __contains__(self, obj: AObject) -> bool:
-        return obj   in self._obj_map
+        return obj in self._obj_map

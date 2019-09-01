@@ -13,7 +13,7 @@ class ObjectMeta(type):
         session to determine the correct API object for a given Algoneer object.
         """
         if hasattr(cls, "Type"):
-            mappings[cls.Type] = cls # type: ignore
+            mappings[cls.Type] = cls  # type: ignore
         super().__init__(name, bases, namespace)
 
 
