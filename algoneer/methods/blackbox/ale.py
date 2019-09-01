@@ -7,15 +7,15 @@ learning models.
 """
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
-from algoneer import Dataset, Model, ModelTest, Attribute
-from algoneer.result import ModelResult
+from algoneer import Dataset, Model, DatasetModelTest, Attribute
+from algoneer.result import Result, DatasetModelResult
 
 from collections import defaultdict
 
 import logging
 
 
-class ALEResult(ModelResult):
+class ALEResult(Result):
     @property
     def name(self):
         return "ale"
@@ -25,7 +25,7 @@ class ALEResult(ModelResult):
         return "1.0.0"
 
 
-class ALE(ModelTest):
+class ALE(DatasetModelTest):
 
     """
     Generates a partial dependence plots for a model.
@@ -34,13 +34,13 @@ class ALE(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+    def run(self, dataset: Dataset, model: Model, **kwargs) -> DatasetModelResult:
         """
         Run the test.
 
-        :param    model: The model for which to generate the ALE.
         :param  dataset: The dataset for which to generate the ALE.
-        :param columns: The columns for which to generate the ALE. Optional.
+        :param    model: The model for which to generate the ALE.
+        :param  columns: The columns for which to generate the ALE. Optional.
         """
 
         columns: Optional[Sequence[str]] = kwargs.get("columns", None)
@@ -129,4 +129,4 @@ class ALE(ModelTest):
                 continue
 
             ALEs[column] = ALE(nds, model, column)
-        return ALEResult(ALEs, model)
+        return DatasetModelResult(dataset=dataset, model=model, result=ALEResult(ALEs))

@@ -7,15 +7,15 @@ learning models.
 """
 
 from typing import Sequence, Optional, Dict, Any, List, Iterable, Tuple, Union
-from algoneer import Dataset, Model, ModelTest, Attribute
-from algoneer.result import ModelResult
+from algoneer import Dataset, Model, DatasetModelTest, Attribute
+from algoneer.result import DatasetModelResult, Result
 
 from collections import defaultdict
 
 import logging
 
 
-class PDPResult(ModelResult):
+class PDPResult(Result):
     @property
     def name(self):
         return "pdp"
@@ -25,7 +25,7 @@ class PDPResult(ModelResult):
         return "1.0.0"
 
 
-class PDP(ModelTest):
+class PDP(DatasetModelTest):
 
     """
     Generates a partial dependence plots for a model.
@@ -34,12 +34,12 @@ class PDP(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+    def run(self, dataset: Dataset, model: Model, **kwargs) -> DatasetModelResult:
         """
         Run the test.
 
-        :param    model: The model for which to generate the PDP.
         :param  dataset: The dataset for which to generate the PDP.
+        :param    model: The model for which to generate the PDP.
         :param columns: The columns for which to generate the PDP. Optional.
         """
 
@@ -165,7 +165,7 @@ class PDP(ModelTest):
                     correlated_pdps[column_a][column_b] = pdp_correlated(
                         nds, model, column_a, column_b
                     )
-            return PDPResult(correlated_pdps, model)
+            result = PDPResult(correlated_pdps)
         else:
 
             pdps: Dict[str, List[Tuple[float, float]]] = {}
@@ -173,4 +173,5 @@ class PDP(ModelTest):
                 if columns is not None and not column in columns:
                     continue
                 pdps[column] = pdp(nds, model, column)
-            return PDPResult(pdps, model)
+            result = PDPResult(pdps)
+        return DatasetModelResult(dataset, model, result)

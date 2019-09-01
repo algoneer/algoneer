@@ -1,8 +1,8 @@
-from .blackbox import model_tests as blackbox_model_tests
-from algoneer.modeltest import ModelTest
+from .blackbox import dataset_model_tests as blackbox_dataset_model_tests
+from algoneer import DatasetModelTest
 
 from typing import Type, List
 
-model_tests: List[Type[ModelTest]] = []
+dataset_model_tests: List[Type[DatasetModelTest]] = []
 
-model_tests.extend(blackbox_model_tests)
+dataset_model_tests.extend(blackbox_dataset_model_tests)

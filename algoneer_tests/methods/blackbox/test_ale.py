@@ -2,11 +2,13 @@ from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 from algoneer.methods.blackbox.ale import ALE, ALEResult
 
+from algoneer.result import DatasetModelResult
+
 import unittest
 
 class TestALE(unittest.TestCase):
 
-    def test_ale(self):
+    def test_ale(self) -> None:
 
         # we load the dataset
         dataset = load_dataset()
@@ -23,7 +25,7 @@ class TestALE(unittest.TestCase):
         columns = ['windspeed', 'hum', 'atemp', 'season']
 
         # we run the ALE test on the model and dataset
-        result = ale.run(model, dataset, columns=columns, max_datapoints=200, n_intervals=10)
+        result = ale.run(dataset, model, columns=columns, max_datapoints=200, n_intervals=10)
 
         # we make sure that we obtain a reasonable result
-        assert isinstance(result, ALEResult)
+        assert isinstance(result, DatasetModelResult)

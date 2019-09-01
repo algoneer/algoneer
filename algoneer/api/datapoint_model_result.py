@@ -3,6 +3,11 @@ from .objects import Objects
 
 
 class DatapointModelResult(Object):
+
+    """
+    
+    """
+
     pass
 
 

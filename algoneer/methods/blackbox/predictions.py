@@ -7,11 +7,11 @@ learning models.
 """
 
 from typing import Iterable, Any, Dict
-from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
-from algoneer.result import ModelResult, DatapointModelResult
+from algoneer import Dataset, Model, DatasetModelTest, Attribute, Datapoint
+from algoneer.result import DatasetModelResult, DatapointModelResult, Result
 
 
-class PredictionsDatapointResult(DatapointModelResult):
+class PredictionsDatapointResult(Result):
     @property
     def name(self):
         return "predictions.datapoint"
@@ -21,7 +21,7 @@ class PredictionsDatapointResult(DatapointModelResult):
         return "1.0.0"
 
 
-class PredictionsResult(ModelResult):
+class PredictionsResult(Result):
     @property
     def name(self):
         return "predictions.model"
@@ -31,7 +31,7 @@ class PredictionsResult(ModelResult):
         return "1.0.0"
 
 
-class Predictions(ModelTest):
+class Predictions(DatasetModelTest):
 
     """
     Generates a list of predictions for a given model.
@@ -40,13 +40,17 @@ class Predictions(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+    def run(self, dataset: Dataset, model: Model, **kwargs) -> DatasetModelResult:
         max_datapoints = kwargs.get("max_datapoints", None)
         Y = model.predict(dataset)
         results = []
         for y in Y:
             ind, pred = y
             dp = dataset.datapoint(ind)
-            results.append(PredictionsDatapointResult({"p": float(pred)}, dp, model))
+            results.append(
+                DatapointModelResult(
+                    dp, model, PredictionsDatapointResult({"p": float(pred)})
+                )
+            )
 
-        return PredictionsResult({}, model, results)
+        return DatasetModelResult(dataset, model, PredictionsResult({}), results)

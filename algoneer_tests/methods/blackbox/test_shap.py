@@ -1,6 +1,8 @@
 from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 
+from algoneer.result import DatasetModelResult
+
 import unittest
 import math
 
@@ -13,7 +15,7 @@ except ModuleNotFoundError:
 class SHAPTest(unittest.TestCase):
 
     @unittest.skipIf(not test_shap, "SHAP module not available")
-    def test_shap(self):
+    def test_shap(self) -> None:
 
         from algoneer.methods.blackbox.shap import SHAP, SHAPDatapointResult, SHAPModelResult
 
@@ -30,10 +32,10 @@ class SHAPTest(unittest.TestCase):
         shap = SHAP()
 
         # we run the SHAP test on the model and dataset
-        result = shap.run(model, dataset, max_datapoints=10)
+        result = shap.run(dataset, model, max_datapoints=10)
 
         # we make sure that we obtain a reasonable result
-        assert isinstance(result, SHAPModelResult)
+        assert isinstance(result, DatasetModelResult)
 
         assert 'expected_value' in result.data
         assert math.fabs(result.data['expected_value'] - 1564.6577928309937) < 1e-7

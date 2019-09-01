@@ -1,10 +1,11 @@
-import algoneer
-from .result import Result
+from .result import Result, ResultProxy
+from algoneer.dataset import Dataset
+from algoneer.model import Model
+from algoneer.object import Object
 
-from typing import Any
 
-
-class DatasetResult(Result):
-    def __init__(self, data: Any, dataset: "algoneer.Dataset"):
-        super().__init__(data)
-        self.dataset = dataset
+class DatasetResult(Object, ResultProxy):
+    def __init__(self, dataset: Dataset, result: Result):
+        Object.__init__(self)
+        ResultProxy.__init__(self, result)
+        self._dataset = dataset

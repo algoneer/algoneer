@@ -1,7 +1,7 @@
 import logging
 
 from algoneer.utils import CI
-from algoneer.modeltest import ModelTest
+from algoneer import DatasetModelTest
 
 from typing import List, Type
 
@@ -9,7 +9,7 @@ from .ale import ALE
 from .pdp import PDP
 from .predictions import Predictions
 
-model_tests: List[Type[ModelTest]] = [ALE, PDP, Predictions]
+dataset_model_tests: List[Type[DatasetModelTest]] = [ALE, PDP, Predictions]
 
 logger = logging.getLogger(__name__)
 
@@ -18,4 +18,4 @@ logger = logging.getLogger(__name__)
 with CI("shap"):
     from .shap import SHAP
 
-    model_tests.append(SHAP)
+    dataset_model_tests.append(SHAP)

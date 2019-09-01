@@ -8,11 +8,11 @@ learning models.
 
 import shap
 from typing import Iterable, Tuple, Optional
-from algoneer import Dataset, Model, ModelTest, Attribute, Datapoint
-from algoneer.result import DatapointModelResult, ModelResult
+from algoneer import Dataset, Model, DatasetModelTest, Attribute, Datapoint
+from algoneer.result import DatapointModelResult, DatasetModelResult, Result
 
 
-class SHAPDatapointResult(DatapointModelResult):
+class SHAPDatapointResult(Result):
     @property
     def name(self):
         return "shap.datapoint"
@@ -22,7 +22,7 @@ class SHAPDatapointResult(DatapointModelResult):
         return "1.0.0"
 
 
-class SHAPModelResult(ModelResult):
+class SHAPModelResult(Result):
     @property
     def name(self):
         return "shap.model"
@@ -32,7 +32,7 @@ class SHAPModelResult(ModelResult):
         return "1.0.0"
 
 
-class SHAP(ModelTest):
+class SHAP(DatasetModelTest):
 
     """
     Generates SHAP explanations for a machine learning model.
@@ -41,7 +41,7 @@ class SHAP(ModelTest):
     def __init__(self):
         super().__init__()
 
-    def run(self, model: Model, dataset: Dataset, **kwargs) -> ModelResult:
+    def run(self, dataset: Dataset, model: Model, **kwargs) -> DatasetModelResult:
         max_datapoints = kwargs.get("max_datapoints", None)
         npd = dataset.roles.x.df
         explainer = shap.KernelExplainer(model.predict, npd[:10])
@@ -52,18 +52,23 @@ class SHAP(ModelTest):
         dp_results = []
         for i, shap_value in enumerate(shap_values):
             dp_results.append(
-                SHAPDatapointResult(
-                    {"shap_value": shap_value, "columns": dataset.roles.x.columns},
+                DatapointModelResult(
                     dataset.datapoint(i),
                     model,
+                    SHAPDatapointResult(
+                        {"shap_value": shap_value, "columns": dataset.roles.x.columns}
+                    ),
                 )
             )
-        return SHAPModelResult(
-            {
-                "expected_value": ex,
-                "shap_values": shap_values,
-                "columns": dataset.roles.x.columns,
-            },
+        return DatasetModelResult(
+            dataset,
             model,
+            SHAPModelResult(
+                {
+                    "expected_value": ex,
+                    "shap_values": shap_values,
+                    "columns": dataset.roles.x.columns,
+                }
+            ),
             dp_results,
         )

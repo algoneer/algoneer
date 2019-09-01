@@ -5,9 +5,9 @@ from .model import Model
 from .algorithm import Algorithm
 from .algorithmschema import AlgorithmSchema
 
-from .modeltest import ModelTest
-from .datasettest import DatasetTest
-from .algorithmtest import AlgorithmTest
+from .dataset_model_test import DatasetModelTest
+from .dataset_test import DatasetTest
+from .algorithm_test import AlgorithmTest
 
 from .object import Object
 

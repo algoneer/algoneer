@@ -1,15 +1,38 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, TypeVar, Generic, Type
+
+from algoneer import Object as AObject
+import algoneer.api
 
 import abc
 
 
-class Object(abc.ABC):
+T = TypeVar("T", bound=AObject)
+
+
+class Object(abc.ABC, Generic[T]):
     """
     All API objects inherit from this class.
     """
 
-    def __init__(self, data: Dict[str, Any]):
+    Type: Type[T]
+
+    def __init__(
+        self,
+        data: Dict[str, Any],
+        session: Optional["algoneer.api.Session"] = None,
+        object: Optional[AObject] = None,
+    ):
+        self._object = object
         self._data = data
+        self._session = session
+
+    @property
+    def object(self) -> Optional[AObject]:
+        return self._object
+
+    @property
+    def session(self) -> Optional["algoneer.api.Session"]:
+        return self._session
 
     @property
     def data(self) -> Dict[str, Any]:
