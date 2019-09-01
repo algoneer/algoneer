@@ -1,11 +1,26 @@
 from typing import Type, List, TypeVar, Generic
 from .object import Object
 import algoneer.api
+import json
 import abc
 
 from typing import TypeVar, Generic, Dict, Any, Optional
 
 T = TypeVar("T", bound=Object)
+
+import datetime
+import base64
+
+
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            if obj.utcoffset() is not None:
+                raise ValueError("Expected a UTC datetime!")
+            return obj.strftime("%Y-%m-%dT%H:%M:%SZ")
+        elif isinstance(obj, (bytes, bytearray)):
+            return base64.b64encode(obj).decode("ascii")
+        return json.JSONEncoder.default(self, obj)
 
 
 class ManagerMeta(abc.ABCMeta):
@@ -43,7 +58,11 @@ class Manager(Generic[T], metaclass=ManagerMeta):
         Create a new object.
         """
         url = self.url(obj)
-        response = self.session.client.post(url, data=obj.data)
+        response = self.session.client.post(
+            url,
+            data=json.dumps(obj.data, cls=Encoder),
+            headers={"Content-Type": "application/json"},
+        )
         if response.status_code != 201:
             raise IOError()
         assert response.data is not None

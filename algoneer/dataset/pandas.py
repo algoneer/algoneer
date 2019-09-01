@@ -128,16 +128,16 @@ class PandasAttribute(Attribute):
         return self._series
 
     def sum(self) -> float:
-        return self._series.sum()
+        return float(self._series.sum())
 
     def mean(self) -> float:
-        return self._series.mean()
+        return float(self._series.mean())
 
     def min(self) -> float:
-        return self._series.min()
+        return float(self._series.min())
 
     def max(self) -> float:
-        return self._series.max()
+        return float(self._series.max())
 
     @proxy
     def __getitem__(self, item):
@@ -257,10 +257,10 @@ class PandasDataset(Dataset):
         return self._df.shape
 
     def sum(self) -> float:
-        return self._df.sum()
+        return float(self._df.sum())
 
     def mean(self) -> float:
-        return self._df.mean()
+        return float(self._df.mean())
 
     @proxy
     def select(

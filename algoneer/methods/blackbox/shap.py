@@ -56,7 +56,7 @@ class SHAP(DatasetModelTest):
                     dataset.datapoint(i),
                     model,
                     SHAPDatapointResult(
-                        {"shap_value": shap_value, "columns": dataset.roles.x.columns}
+                        {"shap_value": shap_value.tolist(), "columns": dataset.roles.x.columns}
                     ),
                 )
             )
@@ -65,9 +65,9 @@ class SHAP(DatasetModelTest):
             model,
             SHAPModelResult(
                 {
-                    "expected_value": ex,
-                    "shap_values": shap_values,
-                    "columns": dataset.roles.x.columns,
+                    "expected_value": float(ex),
+                    "shap_values": shap_values.tolist(),
+                    "columns": list(dataset.roles.x.columns),
                 }
             ),
             dp_results,

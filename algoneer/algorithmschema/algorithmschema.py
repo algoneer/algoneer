@@ -33,7 +33,7 @@ class AlgorithmSchema(Object):
         return self._type
 
     def dump(self) -> Dict[str, Any]:
-        return {"type": self.type.name.lower(), "config": self.config}
+        return {"data": {"type": self.type.name.lower(), "config": self.config}}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

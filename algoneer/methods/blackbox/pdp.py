@@ -99,7 +99,7 @@ class PDP(DatasetModelTest):
                 # we revert the columns to their old values
                 nds[column] = old_column
 
-                ys.append((v, py))
+                ys.append((float(v), py))
 
             return ys
 

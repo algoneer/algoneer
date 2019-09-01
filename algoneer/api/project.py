@@ -15,6 +15,6 @@ class Projects(Manager[Project]):
 
     def url(self, obj: Project) -> str:
         if obj.id is not None:
-            return "/projects/{}".format(obj.id)
+            return "projects/{}".format(obj.id)
         else:
-            return "/organizations/default/project"
+            return "organizations/default/projects"

@@ -58,7 +58,7 @@ class DataSchema(Object, metaclass=DataSchemaMeta):
         attributes: OrderedDict[str, Any] = OrderedDict()
         for key, attribute in self.attributes.items():
             attributes[key] = attribute.dump()
-        return {"attributes": list(attributes.items())}
+        return {"data": {"attributes": list(attributes.items())}}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

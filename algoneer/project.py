@@ -4,16 +4,16 @@ from typing import Dict, Any
 
 
 class Project(Object):
-    def __init__(self, name: str) -> None:
+    def __init__(self, path: str) -> None:
         super().__init__()
-        self._name = name
+        self._path = path
 
     @property
-    def name(self):
-        return self._name
+    def path(self):
+        return self._path
 
     def dump(self) -> Dict[str, Any]:
-        return {"name": self._name}
+        return {"path": self._path}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

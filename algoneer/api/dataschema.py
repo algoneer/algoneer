@@ -22,5 +22,5 @@ class DataSchemas(Manager[DataSchema]):
 
     def url(self, obj: DataSchema) -> str:
         dataset = self.session.get_saved(obj.mapped_obj.dataset)
-        return "/datasets/{}/schemas".format(dataset.id)
+        return "datasets/{}/schemas".format(dataset.id)
         return ""

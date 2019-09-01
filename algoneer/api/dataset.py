@@ -23,5 +23,5 @@ class Datasets(Manager[Dataset]):
     def url(self, obj: Dataset) -> str:
         if obj.id is None:
             project = self.session.get_saved(obj.mapped_obj.project)
-            return "/projects/{}/datasets".format(project.id)
-        return "/datasets/{}".format(obj.id)
+            return "projects/{}/datasets".format(project.id)
+        return "datasets/{}".format(obj.id)

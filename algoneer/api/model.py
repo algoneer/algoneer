@@ -20,5 +20,5 @@ class Models(Manager[Model]):
         if obj.id is None:
             algo = self.session.get_saved(obj.mapped_obj.algorithm)
             dataset = self.session.get_saved(obj.mapped_obj.dataset)
-            return "/dataset/{}/algorithms/{}/models".format(dataset.id, algo.id)
-        return "/projects/{}".format(obj.id)
+            return "datasets/{}/algorithms/{}/models".format(dataset.id, algo.id)
+        return "projects/{}".format(obj.id)

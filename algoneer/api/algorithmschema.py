@@ -22,5 +22,5 @@ class AlgorithmSchemas(Manager[AlgorithmSchema]):
 
     def url(self, obj: AlgorithmSchema) -> str:
         algo = self.session.get_saved(obj.mapped_obj.algorithm)
-        return "/algorithms/{}/schemas".format(algo.id)
+        return "algorithms/{}/schemas".format(algo.id)
         return ""

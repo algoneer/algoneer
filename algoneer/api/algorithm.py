@@ -23,5 +23,5 @@ class Algorithms(Manager[Algorithm]):
     def url(self, obj: Algorithm) -> str:
         if obj.id is None:
             project = self.session.get_saved(obj.mapped_obj.project)
-            return "/projects/{}/algorithms".format(project.id)
-        return "/algorithms/{}".format(obj.id)
+            return "projects/{}/algorithms".format(project.id)
+        return "algorithms/{}".format(obj.id)

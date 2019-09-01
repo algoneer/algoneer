@@ -29,5 +29,5 @@ class DatasetModelResults(Manager[DatasetModelResult]):
         if obj.id is None:
             model = self.session.get_saved(obj.mapped_obj.model)
             dataset = self.session.get_saved(obj.mapped_obj.dataset)
-            return "/dataset/{}/models/{}/results".format(dataset.id, model.id)
-        return "/datasets/{}/models/{}/results/{}".format(dataset.id, model.id, obj.id)
+            return "datasets/{}/models/{}/results".format(dataset.id, model.id)
+        return "datasets/{}/models/{}/results/{}".format(dataset.id, model.id, obj.id)
