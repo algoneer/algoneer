@@ -16,8 +16,6 @@ deploy:
   stage: deploy
   only:
     - /^v\d+\.\d+\.\d+$/
-  before_script:
-    - pip3 install twine
   script:
     - make release
 

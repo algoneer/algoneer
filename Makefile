@@ -22,15 +22,15 @@ docs:
 serve-docs:
 	venv/bin/python -m http.server -d docs/build/html
 
-setup: virtualenv requirements
+setup: venv requirements
 
-docs-setup: virtualenv docs-requirements
+docs-setup: venv docs-requirements
 
 teardown:
 	rm -rf venv
 	rm -rf docs/build/*
 
-virtualenv:
+venv:
 	virtualenv --python python3 venv
 
 docs-requirements:
@@ -46,7 +46,7 @@ update:
 	venv/bin/pur -r requirements.txt
 	venv/bin/pur -r requirements-test.txt
 
-release:
+release: venv
 	venv/bin/pip install twine
 	venv/bin/python setup.py sdist
 	venv/bin/twine upload --skip-existing dist/* -u ${TWINE_USER} -p ${TWINE_PASSWORD}
