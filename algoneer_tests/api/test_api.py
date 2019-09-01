@@ -4,6 +4,9 @@ from algoneer.dataschema import AttributeSchema, DataSchema
 from algoneer.api import Session, Response, Object as APIObject
 from algoneer.api.base_client import BaseClient
 from algoneer.object import Object
+from algoneer.api.object import mappings
+
+print(mappings)
 
 from algoneer.model import Model
 
@@ -44,9 +47,9 @@ class ApiTest(unittest.TestCase):
         client = Client()
         session = Session(client)
 
-        session.add(model)
-        session.add(dataset)
-        session.add(algo)
+        api_model = session.add(model)
+        api_dataset = session.add(dataset)
+        api_algo = session.add(algo)
 
         assert model in session
         assert dataset in session

@@ -1,14 +1,10 @@
 from .object import Object
 from .objects import Objects
+from algoneer.result import DatapointModelResult as ADatapointModelResult
 
 
 class DatapointModelResult(Object):
-
-    """
-    
-    """
-
-    pass
+    Type = ADatapointModelResult
 
 
 class DatapointModelResults(Objects[DatapointModelResult]):

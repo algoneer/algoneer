@@ -1,5 +1,6 @@
 from .object import Object
+from algoneer.dataschema import DataSchema as ADataSchema
 
 
 class DataSchema(Object):
-    pass
+    Type = ADataSchema

@@ -1,9 +1,10 @@
 from .object import Object
 from .objects import Objects
+from algoneer.project import Project as AProject
 
 
 class Project(Object):
-    pass
+    Type = AProject
 
 
 class Projects(Objects[Project]):

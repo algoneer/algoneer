@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict, Type
 from .base_client import BaseClient
-from .object import Object as AObject
-from algoneer.object import Object
+from .object import Object as Object, get_class_for
+from algoneer.object import Object as AObject
 
 
 class Session:
@@ -10,29 +10,40 @@ class Session:
     ):
         self._client = client
         self._exclude_classes = exclude_classes
-        self._objects: Dict[int, AObject] = {}
+        self._obj_map: Dict[AObject, Object] = {}
+        self._inv_obj_map: Dict[Object, AObject] = {}
 
     @property
     def client(self):
         return self._client
 
-    def add(self, object: AObject) -> None:
-        self._objects[id(object)] = object
-
-    def get_api_object(self, object: AObject) -> Optional[Object]:
+    def add(self, obj: AObject) -> Object:
+        """
+        Adds a given object to the session and returns the corresponding API
+        oject.
+        """
+        MappedClass = get_class_for(type(obj))
+        if MappedClass is None:
+            raise ValueError("no mapping for object")
+        mapped_obj = MappedClass(obj=obj, session=self)
+        self._inv_obj_map[mapped_obj] = obj
+        self._obj_map[obj] = mapped_obj
+        return mapped_obj
+    
+    def get_api_obj(self, obj: Object) -> Optional[AObject]:
         pass
 
     def sync(self) -> None:
         """
-        Synchronizes all objects present in the session with the backend.
+        Synchronizes all objs present in the session with the backend.
 
-        * Sort all session objects by their dependencies.
-        * For each object, retrieve the backend URL for storing it.
-        * Call the API to create or update the object and retrieve its ID.
-        * Store the ID and data in the API object class.
+        * Sort all session objs by their dependencies.
+        * For each obj, retrieve the backend URL for storing it.
+        * Call the API to create or update the obj and retrieve its ID.
+        * Store the ID and data in the API obj class.
         * Done :)
         """
         pass
 
-    def __contains__(self, object: AObject) -> bool:
-        return id(object) in self._objects
+    def __contains__(self, obj: AObject) -> bool:
+        return obj   in self._obj_map
