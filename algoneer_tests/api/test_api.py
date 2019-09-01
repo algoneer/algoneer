@@ -10,6 +10,7 @@ from algoneer.model import Model
 from algoneer.project import Project
 
 import unittest
+import uuid
 
 class Client(BaseClient):
 
@@ -17,7 +18,10 @@ class Client(BaseClient):
         return Response(200, {})
 
     def post(self, url: str, **kwargs) -> Response:
-        return Response(200, {})
+        print(url)
+        data = kwargs.copy()
+        data["id"] = str(uuid.uuid4())
+        return Response(201, data)
 
     def patch(self, url: str, **kwargs) -> Response:
         return Response(200, {})
