@@ -50,9 +50,9 @@ class Object(Generic[T], metaclass=ObjectMeta):
     def dependencies(self) -> List[AObject]:
         pass
 
-    @abc.abstractproperty
+    @property
     def data(self) -> Dict[str, Any]:
-        pass
+        return self.obj.dump()
 
     @property
     def api_data(self) -> Optional[Dict[str, Any]]:

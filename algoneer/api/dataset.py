@@ -9,10 +9,6 @@ class Dataset(Object):
     Type = ADataset
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self):
         return [self.obj.project]
 

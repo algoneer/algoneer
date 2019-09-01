@@ -9,10 +9,6 @@ class DatasetResult(Object):
     Type = ADatasetResult
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self):
         return [self.obj.dataset, self.obj.result]
 

@@ -9,10 +9,6 @@ class DataSchema(Object):
     Type = ADataSchema
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self):
         return []
 

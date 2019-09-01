@@ -9,10 +9,6 @@ class DatapointModelResult(Object):
     Type = ADatapointModelResult
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self):
         return [self.obj.datapoint, self.obj.model, self.obj.result]
 

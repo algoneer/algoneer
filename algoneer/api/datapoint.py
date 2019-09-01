@@ -9,10 +9,6 @@ class Datapoint(Object):
     Type = ADatapoint
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self):
         return [self.obj.dataset]
 

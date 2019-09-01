@@ -10,10 +10,6 @@ class Project(Object):
     Type = AProject
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return {}
-
-    @property
     def dependencies(self) -> List[AObject]:
         return []
 
