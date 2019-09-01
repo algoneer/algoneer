@@ -23,6 +23,7 @@ class Manager(Generic[T], metaclass=ManagerMeta):
 
     Type: Type[T]
 
+    @abc.abstractmethod
     def url(self, obj: Optional[T]) -> str:
         """
         Returns the URL to create/update an object

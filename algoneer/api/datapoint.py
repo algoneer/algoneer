@@ -2,7 +2,7 @@ from .object import Object
 from .manager import Manager
 from algoneer.dataset import Datapoint as ADatapoint
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class Datapoint(Object):
@@ -15,3 +15,6 @@ class Datapoint(Object):
 
 class Datapoints(Manager[Datapoint]):
     Type = Datapoint
+
+    def url(self, obj: Optional[Datapoint]) -> str:
+        return ""

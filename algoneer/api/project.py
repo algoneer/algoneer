@@ -2,7 +2,7 @@ from .object import Object
 from .manager import Manager
 from algoneer.project import Project as AProject
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class Project(Object):
@@ -15,3 +15,6 @@ class Project(Object):
 
 class Projects(Manager[Project]):
     Type = Project
+
+    def url(self, obj: Optional[Project]) -> str:
+        return ""

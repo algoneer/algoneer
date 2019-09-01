@@ -2,7 +2,7 @@ from .object import Object
 from .manager import Manager
 from algoneer.result import ModelResult as AModelResult
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class ModelResult(Object):
@@ -15,3 +15,6 @@ class ModelResult(Object):
 
 class ModelResults(Manager[ModelResult]):
     Type = ModelResult
+
+    def url(self, obj: Optional[ModelResult]) -> str:
+        return ""

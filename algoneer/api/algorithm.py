@@ -2,7 +2,7 @@ from .object import Object
 from .manager import Manager
 from algoneer.algorithm import Algorithm as AAlgorithm
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class Algorithm(Object):
@@ -15,3 +15,6 @@ class Algorithm(Object):
 
 class Algorithms(Manager[Algorithm]):
     Type = Algorithm
+
+    def url(self, obj: Optional[Algorithm]) -> str:
+        return ""

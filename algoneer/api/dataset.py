@@ -2,7 +2,7 @@ from .object import Object
 from .manager import Manager
 from algoneer.dataset import Dataset as ADataset
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class Dataset(Object):
@@ -15,3 +15,6 @@ class Dataset(Object):
 
 class Datasets(Manager[Dataset]):
     Type = Dataset
+
+    def url(self, obj: Optional[Dataset]) -> str:
+        return ""
