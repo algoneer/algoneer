@@ -1,6 +1,6 @@
 from enum import Enum
 
-from typing import Mapping, Iterable, Any, Optional
+from typing import Mapping, Iterable, Any, Optional, Dict
 
 import algoneer.dataschema
 import algoneer.dataset
@@ -66,6 +66,16 @@ class AttributeSchema:
             column=self.column,
             config=self.config,
         )
+
+    def dump(self) -> Dict[str, Any]:
+        return {
+            "type": self.type.name.lower(),
+            "roles": self.roles,
+            "config": self.config,
+        }
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
 
     def enforce(self, ds: "algoneer.dataset.Dataset"):
         attribute = ds[self.column]

@@ -10,7 +10,7 @@ class DatapointModelResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.datapoint, self.obj.model, self.obj.result]
+        return [self.obj.datapoint, self.obj.model]
 
 
 class DatapointModelResults(Manager[DatapointModelResult]):

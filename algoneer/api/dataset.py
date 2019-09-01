@@ -10,7 +10,7 @@ class Dataset(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.project]
+        return [self.obj.project, self.obj.schema]
 
 
 class Datasets(Manager[Dataset]):

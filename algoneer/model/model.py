@@ -15,7 +15,7 @@ class Model(Object, abc.ABC):
         self._dataset = dataset
 
     def dump(self) -> Dict[str, Any]:
-        return {}
+        return {"data": self.data}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

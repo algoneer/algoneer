@@ -2,11 +2,12 @@ from algoneer.object import Object
 from collections import OrderedDict
 from .attributeschema import AttributeSchema
 import algoneer.dataset
+import abc
 
 from typing import Mapping, Any, Optional, Set, Dict
 
 
-class DataSchemaMeta(type):
+class DataSchemaMeta(abc.ABCMeta):
     def __init__(cls, name, bases, namespace):
         attributes = {}
         for key, value in namespace.items():
@@ -26,7 +27,7 @@ class DataSchema(Object, metaclass=DataSchemaMeta):
         if schema is not None:
             self._attributes = parse_attributes(self, schema)
         else:
-            self._attributes = {}
+            self._attributes = OrderedDict()
         if attributes is None:
             for key, attribute in self.__class__._predefined_attributes.items():
                 attribute.dataschema = self
@@ -54,7 +55,10 @@ class DataSchema(Object, metaclass=DataSchemaMeta):
         return type(self)(attributes=new_attributes)
 
     def dump(self) -> Dict[str, Any]:
-        return {}
+        attributes: OrderedDict[str, Any] = OrderedDict()
+        for key, attribute in self.attributes.items():
+            attributes[key] = attribute.dump()
+        return {"attributes": [list(attributes.items())]}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

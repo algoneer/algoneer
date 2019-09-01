@@ -27,6 +27,14 @@ class DatasetModelResult(Object, ResultProxy):
         self._model = model
         self._datapoint_results = datapoint_results
 
+    @property
+    def dataset(self):
+        return self._dataset
+
+    @property
+    def model(self):
+        return self._model
+
     def dump(self) -> Dict[str, Any]:
         return {}
 

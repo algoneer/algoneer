@@ -2,11 +2,11 @@ import abc
 from typing import Optional, Dict, Any
 
 
-class Object:
+class Object(abc.ABC):
     @abc.abstractmethod
     def dump(self) -> Dict[str, Any]:
-        pass
+        raise NotImplementedError
 
     @abc.abstractmethod
     def load(self, data: Dict[str, Any]) -> None:
-        pass
+        raise NotImplementedError

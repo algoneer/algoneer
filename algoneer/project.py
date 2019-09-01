@@ -13,7 +13,7 @@ class Project(Object):
         return self._name
 
     def dump(self) -> Dict[str, Any]:
-        return {}
+        return {"name": self._name}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

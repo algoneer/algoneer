@@ -9,7 +9,7 @@ from algoneer.algorithmschema import AlgorithmSchema
 from typing import Optional, Dict, Any
 
 
-class Algorithm(Object, abc.ABC):
+class Algorithm(Object):
     def __init__(self, project: Project, schema: AlgorithmSchema) -> None:
         super().__init__()
         self._schema = schema
@@ -22,6 +22,15 @@ class Algorithm(Object, abc.ABC):
                 return True
             return False
         return super().__getattr__(attr)
+
+    def load(self, data: Dict[str, Any]) -> None:
+        pass
+
+    def dump(self) -> Dict[str, Any]:
+        return {
+            "data" : self.data,
+            "name" : self.name,
+        }
 
     @abc.abstractproperty
     def name(self) -> str:

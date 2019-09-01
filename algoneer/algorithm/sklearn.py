@@ -42,7 +42,7 @@ class SklearnAlgorithm(Algorithm):
 
     @property
     def name(self) -> str:
-        return self._estimator_class.__name__
+        return self._estimator_class.__module__+'.'+self._estimator_class.__name__
 
     @property
     def data(self) -> Dict[str, Any]:

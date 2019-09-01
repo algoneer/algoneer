@@ -10,7 +10,7 @@ class DatasetResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.dataset, self.obj.result]
+        return [self.obj.dataset]
 
 
 class DatasetResults(Manager[DatasetResult]):

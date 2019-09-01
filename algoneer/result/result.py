@@ -11,7 +11,7 @@ class Result(Object, abc.ABC):
         self._data = data
 
     def dump(self) -> Dict[str, Any]:
-        return {}
+        return {"data": self.data, "name": self.name, "version": self.version}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass

@@ -10,7 +10,7 @@ class AlgorithmResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.algorithm, self.obj.result]
+        return [self.obj.algorithm]
 
 
 class AlgorithmResults(Manager[AlgorithmResult]):

@@ -10,7 +10,7 @@ class ModelResult(Object):
 
     @property
     def dependencies(self):
-        return [self.obj.model, self.obj.result]
+        return [self.obj.model]
 
 
 class ModelResults(Manager[ModelResult]):

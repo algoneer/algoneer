@@ -23,7 +23,7 @@ class Dataset(Object, abc.ABC):
         self._name = name
 
     def dump(self) -> Dict[str, Any]:
-        return {}
+        return {"length": len(self), "hash": self.hash}
 
     def load(self, data: Dict[str, Any]) -> None:
         pass
