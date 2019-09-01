@@ -42,6 +42,12 @@ class Session:
           * Get dependent objects and insert them before the object
           * Save the object using its query manager (which extracts the relevant
             data and the ID and queries the API)
+
+        * Store projects
+        * Store algorithms
+        * Store datasets
+        * Store models
+        * Store 
         """
         managers: Dict[Type[Object], Manager] = {}
         for obj in self._obj_map.values():

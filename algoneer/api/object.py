@@ -2,11 +2,12 @@ from typing import Dict, Any, Optional, TypeVar, Generic, Type, List
 
 from algoneer import Object as AObject
 import algoneer.api
+import abc
 
 T = TypeVar("T", bound=AObject)
 
 
-class ObjectMeta(type):
+class ObjectMeta(abc.ABCMeta):
     def __init__(cls, name: str, bases, namespace) -> None:
         """
         We add the mapped class to the mappings dictionary, which allows the
@@ -26,13 +27,10 @@ class Object(Generic[T], metaclass=ObjectMeta):
     Type: Type[T]
 
     def __init__(
-        self,
-        obj: Optional[T] = None,
-        data: Optional[Dict[str, Any]] = None,
-        session: Optional["algoneer.api.Session"] = None,
+        self, obj: Optional[T], session: Optional["algoneer.api.Session"] = None
     ):
         self._obj = obj
-        self._data = data
+        self._api_data: Optional[Dict[str, Any]] = None
         self._session = session
 
     @property
@@ -50,25 +48,29 @@ class Object(Generic[T], metaclass=ObjectMeta):
     def session(self) -> Optional["algoneer.api.Session"]:
         return self._session
 
-    @property
-    def data(self) -> Optional[Dict[str, Any]]:
-        return self._data
+    @abc.abstractproperty
+    def data(self) -> Dict[str, Any]:
+        pass
 
-    @data.setter
-    def data(self, data: Dict[str, Any]) -> None:
-        self._data = data
+    @property
+    def api_data(self) -> Optional[Dict[str, Any]]:
+        return self._api_data
+
+    @api_data.setter
+    def api_data(self, api_data: Dict[str, Any]) -> None:
+        self._api_data = api_data
 
     @property
     def id(self) -> Optional[str]:
-        if self._data is None:
+        if self._api_data is None:
             return None
-        return self._data.get("id")
+        return self._api_data.get("id")
 
     @id.setter
     def id(self, id: Optional[str]) -> None:
-        if self._data is None:
-            self._data = {}
-        self._data["id"] = id
+        if self._api_data is None:
+            self._api_data = {}
+        self._api_data["id"] = id
 
 
 mappings: Dict[Type[AObject], Type[Object]] = {}
