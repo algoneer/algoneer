@@ -5,7 +5,7 @@ from req import reqs
 setup(
     name="algoneer",
     python_requires=">=3.6",
-    version="0.0.11",
+    version="0.0.12",
     author="Andreas Dewes",
     author_email="authors@algoneer.org",
     license="MIT",
