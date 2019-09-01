@@ -26,9 +26,7 @@ class Object(Generic[T], metaclass=ObjectMeta):
 
     Type: Type[T]
 
-    def __init__(
-        self, obj: Optional[T], session: Optional["algoneer.api.Session"] = None
-    ):
+    def __init__(self, obj: T, session: Optional["algoneer.api.Session"] = None):
         self._obj = obj
         self._api_data: Optional[Dict[str, Any]] = None
         self._session = session
@@ -41,12 +39,16 @@ class Object(Generic[T], metaclass=ObjectMeta):
         return []
 
     @property
-    def obj(self) -> Optional[T]:
+    def obj(self) -> T:
         return self._obj
 
     @property
     def session(self) -> Optional["algoneer.api.Session"]:
         return self._session
+
+    @abc.abstractproperty
+    def dependencies(self) -> List[AObject]:
+        pass
 
     @abc.abstractproperty
     def data(self) -> Dict[str, Any]:

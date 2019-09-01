@@ -34,7 +34,7 @@ class Algorithm(Object, abc.ABC):
 
     @property
     def project(self):
-        self._project = project
+        return self._project
 
     @property
     def schema(self) -> AlgorithmSchema:

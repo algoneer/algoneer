@@ -12,6 +12,10 @@ class Model(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.algorithm, self.obj.dataset]
+
 
 class Models(Manager[Model]):
     Type = Model

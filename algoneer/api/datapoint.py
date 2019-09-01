@@ -12,6 +12,10 @@ class Datapoint(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.dataset]
+
 
 class Datapoints(Manager[Datapoint]):
     Type = Datapoint

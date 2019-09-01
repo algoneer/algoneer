@@ -12,6 +12,10 @@ class ModelResult(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.model, self.obj.result]
+
 
 class ModelResults(Manager[ModelResult]):
     Type = ModelResult

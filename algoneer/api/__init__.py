@@ -1,8 +1,10 @@
 from .session import Session  # noqa
 from .object import Object  # noqa
 from .algorithm import Algorithm  # noqa
+from .algorithmschema import AlgorithmSchema  # noqa
 from .datapoint import Datapoint  # noqa
 from .dataset import Dataset  # noqa
+from .dataschema import DataSchema  # noqa
 from .model import Model  # noqa
 from .project import Project  # noqa
 from .client import Client  # noqa

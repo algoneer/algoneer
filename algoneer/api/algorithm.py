@@ -12,6 +12,10 @@ class Algorithm(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.project, self.obj.schema]
+
 
 class Algorithms(Manager[Algorithm]):
     Type = Algorithm

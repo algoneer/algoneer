@@ -12,6 +12,10 @@ class DatasetModelResult(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.dataset, self.obj.model, self.obj.result]
+
 
 class DatasetModelResults(Manager[DatasetModelResult]):
     Type = DatasetModelResult

@@ -34,6 +34,8 @@ class Manager(Generic[T], metaclass=ManagerMeta):
         self.session = session
 
     def save(self, obj: T) -> bool:
+        print("Saving object of type {}...".format(type(obj).__name__))
+        print(obj.data)
         if obj.id is not None:
             return self._update(obj)
         return self._create(obj)

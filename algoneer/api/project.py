@@ -1,8 +1,9 @@
 from .object import Object
 from .manager import Manager
 from algoneer.project import Project as AProject
+from algoneer.object import Object as AObject
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 
 class Project(Object):
@@ -11,6 +12,10 @@ class Project(Object):
     @property
     def data(self) -> Dict[str, Any]:
         return {}
+
+    @property
+    def dependencies(self) -> List[AObject]:
+        return []
 
 
 class Projects(Manager[Project]):

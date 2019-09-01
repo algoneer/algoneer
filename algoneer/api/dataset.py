@@ -12,6 +12,10 @@ class Dataset(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return [self.obj.project]
+
 
 class Datasets(Manager[Dataset]):
     Type = Dataset

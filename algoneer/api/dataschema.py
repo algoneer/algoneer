@@ -12,6 +12,10 @@ class DataSchema(Object):
     def data(self) -> Dict[str, Any]:
         return {}
 
+    @property
+    def dependencies(self):
+        return []
+
 
 class DataSchemas(Manager[DataSchema]):
     Type = DataSchema
