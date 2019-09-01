@@ -1,6 +1,7 @@
 from algoneer_datasets.bike_sharing import load_dataset
 from algoneer.algorithm import Algorithm
 from algoneer.model import Model
+from algoneer.project import Project
 
 import unittest
 
@@ -18,10 +19,12 @@ class SklearnModelTest(unittest.TestCase):
         from algoneer.algorithm.sklearn import SklearnAlgorithm
         from sklearn.ensemble import RandomForestRegressor
 
-        # we load the dataset
-        dataset = load_dataset()
+        project = Project("test")
 
-        algo = SklearnAlgorithm(RandomForestRegressor, n_estimators=100)
+        # we load the dataset
+        dataset = load_dataset(project)
+
+        algo = SklearnAlgorithm(project, RandomForestRegressor, n_estimators=100)
 
         assert isinstance(algo, Algorithm)
 

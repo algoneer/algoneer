@@ -1,5 +1,6 @@
 from algoneer_datasets.bike_sharing import load_dataset
 from algoneer.dataset import Dataset
+from algoneer.project import Project
 
 import unittest
 
@@ -7,8 +8,10 @@ class PandasDatasetTest(unittest.TestCase):
 
     def test_sklean(self):
 
+        project = Project("test")
+
         # we load the dataset
-        dataset = load_dataset()
+        dataset = load_dataset(project)
 
         assert isinstance(dataset, Dataset)
 

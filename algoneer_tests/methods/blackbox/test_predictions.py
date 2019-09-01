@@ -3,6 +3,7 @@ from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 from algoneer.methods.blackbox.predictions import Predictions, PredictionsResult
 
 from algoneer.result import DatasetModelResult
+from algoneer.project import Project
 
 import unittest
 
@@ -10,11 +11,13 @@ class TestPredictions(unittest.TestCase):
 
     def test_predictions(self) -> None:
 
+        project = Project("test")
+
         # we load the dataset
-        dataset = load_dataset()
+        dataset = load_dataset(project)
         
         # we select an algorithm from the set of algorithms
-        algo = get_algorithm('random-forest')
+        algo = get_algorithm(project, 'random-forest')
 
         # we train the algorithm with the dataset to obtain a model
         model = algo.fit(dataset)

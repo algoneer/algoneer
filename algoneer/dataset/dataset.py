@@ -1,5 +1,6 @@
 from algoneer.dataschema import DataSchema
 from algoneer.object import Object
+from algoneer.project import Project
 from .roles import Roles
 from .datapoint import Datapoint
 from .attribute import Attribute
@@ -13,10 +14,17 @@ class Dataset(Object, abc.ABC):
     """Describes a collection of datapoints.
     """
 
-    def __init__(self, schema: DataSchema, name: str = "unnamed dataset") -> None:
+    def __init__(
+        self, project: Project, schema: DataSchema, name: str = "unnamed dataset"
+    ) -> None:
         super().__init__()
         self._schema = schema
+        self._project = project
         self._name = name
+
+    @property
+    def project(self):
+        return self._project
 
     @property
     def roles(self):

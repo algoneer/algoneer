@@ -2,6 +2,7 @@ from algoneer_datasets.bike_sharing import load_dataset
 from algoneer_datasets.bike_sharing.algorithms import get_algorithm, algorithms
 
 from algoneer.result import DatasetModelResult
+from algoneer.project import Project
 
 import unittest
 import math
@@ -19,11 +20,13 @@ class SHAPTest(unittest.TestCase):
 
         from algoneer.methods.blackbox.shap import SHAP, SHAPDatapointResult, SHAPModelResult
 
+        project = Project("test")
+
         # we load the dataset
-        dataset = load_dataset()
+        dataset = load_dataset(project)
         
         # we select an algorithm from the set of algorithms
-        algo = get_algorithm('linear-regression')
+        algo = get_algorithm(project, 'linear-regression')
 
         # we train the algorithm with the dataset to obtain a model
         model = algo.fit(dataset)

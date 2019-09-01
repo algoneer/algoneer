@@ -1,6 +1,7 @@
 import abc
 
 import algoneer.model
+from algoneer.project import Project
 from algoneer.object import Object
 from algoneer.dataset import Dataset
 from algoneer.algorithmschema import AlgorithmSchema
@@ -9,9 +10,10 @@ from typing import Optional, Dict, Any
 
 
 class Algorithm(Object, abc.ABC):
-    def __init__(self, schema: AlgorithmSchema) -> None:
+    def __init__(self, project: Project, schema: AlgorithmSchema) -> None:
         super().__init__()
         self._schema = schema
+        self._project = project
 
     def __getattr__(self, attr):
         if attr.startswith("is_"):
@@ -29,6 +31,10 @@ class Algorithm(Object, abc.ABC):
     @abc.abstractmethod
     def data(self) -> Dict[str, Any]:
         pass
+
+    @property
+    def project(self):
+        self._project = project
 
     @property
     def schema(self) -> AlgorithmSchema:

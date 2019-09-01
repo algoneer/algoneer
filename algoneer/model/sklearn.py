@@ -51,4 +51,4 @@ class SklearnModel(Model):
         y = pd.DataFrame(self._estimator.predict(x.df), columns=columns)
 
         # we return a new dataset and return it
-        return PandasDataset(dataset.roles.y.schema, y)
+        return PandasDataset(dataset.project, dataset.roles.y.schema, y)

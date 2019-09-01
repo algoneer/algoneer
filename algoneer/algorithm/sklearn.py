@@ -9,12 +9,18 @@ from algoneer.dataset import Dataset
 
 from algoneer.model.sklearn import SklearnModel
 from algoneer.model import Model
+from algoneer.project import Project
 
 from typing import Optional, Mapping, Any, Type, Dict
 
 
 class SklearnAlgorithm(Algorithm):
-    def __init__(self, estimator_class: Type[sklearn.base.BaseEstimator], **kwargs):
+    def __init__(
+        self,
+        project: Project,
+        estimator_class: Type[sklearn.base.BaseEstimator],
+        **kwargs
+    ):
 
         if kwargs is None:
             kwargs = {}
@@ -32,7 +38,7 @@ class SklearnAlgorithm(Algorithm):
         elif issubclass(estimator_class, sklearn.base.ClusterMixin):
             schema = AlgorithmSchema(type=AlgorithmSchema.Type.Cluster)
 
-        super().__init__(schema=schema)
+        super().__init__(project=project, schema=schema)
 
     @property
     def name(self) -> str:

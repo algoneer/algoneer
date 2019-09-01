@@ -1,6 +1,7 @@
 from .dataset import Dataset, Attribute, Datapoint
 from .dataschema import DataSchema
 
+from .project import Project
 from .model import Model
 from .algorithm import Algorithm
 from .algorithmschema import AlgorithmSchema

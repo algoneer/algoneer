@@ -23,6 +23,7 @@ from .attribute import Attribute
 from .datapoint import Datapoint
 from algoneer.utils.hashing import get_hash
 from algoneer.dataschema import DataSchema, AttributeSchema
+from algoneer.project import Project
 
 
 def proxy(
@@ -47,7 +48,7 @@ def proxy(
             v: Any, ds: PandasDataset
         ) -> Union[PandasAttribute, PandasDataset, Any]:
             if isinstance(v, pd.DataFrame):
-                nds = PandasDataset(ds.schema[set(v.columns)], v)
+                nds = PandasDataset(ds.project, ds.schema[set(v.columns)], v)
                 return nds
             elif isinstance(v, pd.Series):
                 schema = ds.schema.attributes.get(v.name)
@@ -178,9 +179,9 @@ class PandasDataset(Dataset):
     on a :class:`pandas.DataFrame`.
     """
 
-    def __init__(self, schema: DataSchema, df: pd.DataFrame) -> None:
+    def __init__(self, project: Project, schema: DataSchema, df: pd.DataFrame) -> None:
         # we need to use __dict__ since we overwrote the __getattr__ function
-        super().__init__(schema)
+        super().__init__(project, schema)
         # we only select the relevant columns from the dataframe
         rdf = df[list(schema.attributes.keys())]
         self.__dict__["_df"] = rdf
@@ -273,7 +274,7 @@ class PandasDataset(Dataset):
     def copy(self) -> "PandasDataset":
 
         # we initialize a new dataset with a copy of the dataframe
-        ds = PandasDataset(self.schema.copy(), self._df.copy())
+        ds = PandasDataset(self.project, self.schema.copy(), self._df.copy())
         # we copy the schema as well
         ds.schema = self.schema
 
@@ -293,7 +294,7 @@ class PandasDataset(Dataset):
         return dataset.copy()
 
     @staticmethod
-    def from_path(path: str) -> "PandasDataset":
+    def from_path(project: Project, path: str) -> "PandasDataset":
         spec_filename = os.path.join(path, "dataset.yml")
 
         if not os.path.isfile(spec_filename):
@@ -314,18 +315,18 @@ class PandasDataset(Dataset):
 
         # we assign the data schema to the dataset
         schema = DataSchema(c.get("schema", {}))
-        ds = PandasDataset(schema, df)
+        ds = PandasDataset(project, schema, df)
 
         return ds
 
     def __sub__(self, other: "Dataset") -> "PandasDataset":
         assert isinstance(other, PandasDataset)
-        ds = PandasDataset(self.schema, self.df - other.df)
+        ds = PandasDataset(self.project, self.schema, self.df - other.df)
         return ds
 
     def __add__(self, other: "Dataset") -> "PandasDataset":
         assert isinstance(other, PandasDataset)
-        ds = PandasDataset(self.schema, self.df + other.df)
+        ds = PandasDataset(self.project, self.schema, self.df + other.df)
         return ds
 
     @proxy

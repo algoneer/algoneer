@@ -1,4 +1,3 @@
-from algoneer_datasets.bike_sharing import load_dataset
 from algoneer.dataschema import AttributeSchema, DataSchema
 
 def test_dataschema():

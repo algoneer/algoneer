@@ -6,6 +6,7 @@ from algoneer.api.base_client import BaseClient
 from algoneer.object import Object
 from algoneer.api.object import mappings
 from algoneer.model import Model
+from algoneer.project import Project
 
 import unittest
 
@@ -27,11 +28,13 @@ class ApiTest(unittest.TestCase):
 
     def test_objects(self) -> None:
 
+        project = Project("test")
+
         # we load the dataset
-        dataset = load_dataset()
+        dataset = load_dataset(project)
         
         # we select an algorithm from the set of algorithms
-        algo = get_algorithm('linear-regression')
+        algo = get_algorithm(project, 'linear-regression')
 
         # we train the algorithm with the dataset to obtain a model
         model = algo.fit(dataset)
