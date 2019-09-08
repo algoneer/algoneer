@@ -22,7 +22,6 @@ class TestClient(BaseClient):
         return Response(200, {})
 
     def post(self, url: str, **kwargs) -> Response:
-        print(url)
         data = kwargs.copy()
         data["id"] = str(uuid.uuid4())
         return Response(201, data)

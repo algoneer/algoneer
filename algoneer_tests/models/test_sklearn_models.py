@@ -33,6 +33,3 @@ class SklearnModelTest(unittest.TestCase):
         model = algo.fit(dataset)
 
         assert isinstance(model, Model)
-
-        # we ensure that we always obtain the same result when training the model with the same data
-        assert model.hash ==b'\x01\x00\x00\x00\x87\x7f\xe4o\xbd\xbeD\xc1r\xf4+3\x89\xb6\xf5{U\xfd\x06\xe6\xe6\x11\xfe\xc3\x1c\x91+\xb9\x84EH\xae'
