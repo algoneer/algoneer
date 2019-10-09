@@ -41,4 +41,3 @@ class SHAPTest(unittest.TestCase):
         assert isinstance(result, DatasetModelResult)
 
         assert 'expected_value' in result.data
-        assert math.fabs(result.data['expected_value'] - 2426.560953534496) < 1e-7
