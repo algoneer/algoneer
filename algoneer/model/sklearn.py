@@ -47,8 +47,14 @@ class SklearnModel(Model):
 
         columns = list(dataset.roles.y.schema.attributes.keys())
 
+        yr = self._estimator.predict(x.df)
+
+        # if the estimator returns a 1D array we reshape it
+        if len(yr.shape) == 1:
+            yr = yr.reshape((yr.shape[0], 1))
+
         # we predict the value using an sklearn estimator
-        y = pd.DataFrame(self._estimator.predict(x.df), columns=columns)
+        y = pd.DataFrame(yr, columns=columns)
 
         # we return a new dataset and return it
         return PandasDataset(dataset.project, dataset.roles.y.schema, y)
